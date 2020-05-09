@@ -1,0 +1,20 @@
+{
+  "name": "happenings",
+  "version": "1.0.0",
+  "description": "online platform that provide letest gist, entertainment , sport and politics new news what can not be found any were",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wsiaxon/happenings.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wsiaxon/happenings/issues"
+  },
+  "homepage": "https://github.com/wsiaxon/happenings#readme"
+}
