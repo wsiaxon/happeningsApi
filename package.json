@@ -1,20 +1,32 @@
 {
   "name": "happenings",
   "version": "1.0.0",
-  "description": "online platform that provide letest gist, entertainment , sport and politics new news what can not be found any were",
+  "description": "Online platform that provide latest gist, entertainment, sport and politics news that cannot be found any where",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "lint": "eslint \"**/*.ts\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run lint && npm run tsc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wsiaxon/happenings.git"
+    "url": "git+https://github.com/wsiaxon/happeningsApi.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wsiaxon/happenings/issues"
+    "url": "https://github.com/wsiaxon/happeningsApi/issues"
   },
-  "homepage": "https://github.com/wsiaxon/happenings#readme"
+  "homepage": "https://github.com/wsiaxon/happeningsApi#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.6.0",
+    "ghook": "0.0.2",
+    "prettier": "^2.0.5"
+  }
 }
