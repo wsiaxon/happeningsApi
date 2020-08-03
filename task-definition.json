@@ -18,7 +18,7 @@
   "volumes": [],
   "networkMode": "awsvpc",
   "memory": "1024",
-  "cpu": "256",
+  "cpu": "512",
   "executionRoleArn": "ecsTaskExecutionRole",
   "family": "happenings-task-definition",
   "placementConstraints": []
