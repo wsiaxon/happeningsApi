@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon server.js",
-    "start": "node src/server.js",
+    "start": "node server.js",
     "lint": "eslint \"**/*.ts\"",
     "build": "npm run lint && npm run tsc",
     "dev": "nodemon --exec babel-node server.js",
@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/wsiaxon/happeningsApi#readme",
   "dependencies": {
+    "express": "^4.17.1",
+    "rimraf": "^3.0.2",
     "@babel/preset-env": "^7.11.0",
     "@babel/register": "^7.10.5",
     "@babel/runtime": "^7.11.2",
@@ -34,7 +36,6 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
     "express-joi-validator": "^2.0.1",
     "express-validation": "^1.0.3",
     "http": "0.0.0",
@@ -45,9 +46,6 @@
     "mysql2": "^1.7.0",
     "nodemon": "^1.19.4",
     "os": "^0.1.1",
-    "pg": "^8.3.0",
-    "pg-hstore": "^2.3.3",
-    "rimraf": "^3.0.2",
     "sequelize": "^5.22.3",
     "sequelize-cli": "^5.5.1"
   },
