@@ -10,6 +10,11 @@ const router = express.Router();
 // Public routes
 //= ===============================
 
+router.get(
+  '/home',
+  // validate(userValidator.login),
+  (req, res, next) => res.send("Home Page"),
+);
 router.post(
   '/login',
   validate(userValidator.login),

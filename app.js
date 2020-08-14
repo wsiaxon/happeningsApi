@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import session from 'express-session';
 
 import publicRoutes from './src/routes/public';
 import apiRoutes from './src/routes/api';
@@ -22,10 +23,13 @@ app.use(
 );
 
 app.use(cors());
+app.use(require('morgan')('dev'));
 app.use(bodyParser.json());
-app.use('/pub', publicRoutes);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/', publicRoutes);
 app.use('/api', apiMiddleware, apiRoutes);
 app.use('/api/admin', apiMiddleware, adminMiddleware, adminRoutes);
+app.use(session({ secret: 'happenings', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 app.use(errorHandler);
 
 module.exports = app;
