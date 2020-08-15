@@ -1,21 +1,22 @@
-const Sequelize = require('sequelize');
+const { config } = require('dotenv');
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASS,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: process.env.DB_DIALECT,
+config();
+
+module.exports = {
+  development: {
+    url: process.env.DATABASE_URL,
+    dialect: process.env.DATABASE_DIALECT,
   },
-);
-
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch((err) => {
-    console.error('Unable to connect to the database:', err);
-  });
+  test: {
+    url: process.env.DATABASE_TEST_URL,
+    dialect: process.env.DATABASE_DIALECT,
+  },
+  staging: {
+    url: process.env.DATABASE_URL,
+    dialect: process.env.DATABASE_DIALECT,
+  },
+  production: {
+    url: process.env.DATABASE_URL,
+    dialect: process.env.DATABASE_DIALECT,
+  },
+};
