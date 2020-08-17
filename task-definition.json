@@ -19,8 +19,8 @@
   "compatibilities": [
     "EC2"
   ],
-  "taskDefinitionArn": "task-definition/happeningsApiWebServer",
-  "family": "happeningsApiWebServer",
+  "taskDefinitionArn": "task-definition/happeningsApiServer",
+  "family": "happeningsApiServer",
   "requiresCompatibilities": [
     "EC2"
   ],
