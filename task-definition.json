@@ -2,13 +2,13 @@
   "executionRoleArn": "ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "name": "nginxContainer",
+      "name": "happeningsApiContainer",
       "image": "github-actions-continuous-delivery",
       "resourceRequirements": null,
       "essential": true,
       "portMappings": [
         {
-          "containerPort": "8080",
+          "containerPort": "80",
           "protocol": "tcp"
         }
       ]
@@ -19,8 +19,8 @@
   "compatibilities": [
     "EC2"
   ],
-  "taskDefinitionArn": "task-definition/nginxWebServer",
-  "family": "nginxWebServer",
+  "taskDefinitionArn": "task-definition/happeningsApiWebServer",
+  "family": "happeningsApiWebServer",
   "requiresCompatibilities": [
     "EC2"
   ],
