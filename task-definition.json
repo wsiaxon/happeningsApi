@@ -3,7 +3,6 @@
   "containerDefinitions": [
     {
       "name": "happeningsApiContainer",
-      "image": "github-actions-continuous-delivery",
       "resourceRequirements": null,
       "essential": true,
       "portMappings": [
@@ -26,7 +25,6 @@
   ],
   "networkMode": "bridge",
   "cpu": "1024",
-  "revision": 2,
   "status": "ACTIVE",
   "volumes": []
 }
