@@ -1,9 +1,8 @@
 {
-  "requiresCompatibilities": ["FARGATE"],
-  "inferenceAccelerators": [],
+  "executionRoleArn": "ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "name": "happenings-backend",
+      "name": "nginxContainer",
       "image": "github-actions-continuous-delivery",
       "resourceRequirements": null,
       "essential": true,
@@ -15,11 +14,19 @@
       ]
     }
   ],
-  "volumes": [],
-  "networkMode": "awsvpc",
-  "memory": "1024",
-  "cpu": "512",
-  "executionRoleArn": "ecsTaskExecutionRole",
-  "family": "happenings-task-definition",
-  "placementConstraints": []
+  "memory": "300",
+  "taskRoleArn": "ecsTaskExecutionRole",
+  "compatibilities": [
+    "EC2"
+  ],
+  "taskDefinitionArn": "task-definition/nginxWebServer",
+  "family": "nginxWebServer",
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "networkMode": "bridge",
+  "cpu": "1024",
+  "revision": 2,
+  "status": "ACTIVE",
+  "volumes": []
 }
