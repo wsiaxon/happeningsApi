@@ -25,7 +25,6 @@
 
 on:
   pull_request:
-  push:
     branches: [staging]
 
 name: Staging Deploy to Amazon ECS
