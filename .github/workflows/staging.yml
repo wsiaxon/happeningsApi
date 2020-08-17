@@ -24,7 +24,7 @@
 #    and best practices on handling the access key credentials.
 
 on:
-  pull_request:
+  push:
     branches: [staging]
 
 name: Staging Deploy to Amazon ECS
