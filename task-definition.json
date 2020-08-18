@@ -25,7 +25,6 @@
   "compatibilities": [
     "EC2"
   ],
-  "taskDefinitionArn": "task-definition/happeningsServer",
   "family": "happeningsServer",
   "requiresCompatibilities": [
     "EC2"
