@@ -75,7 +75,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: happeningsapi-repo
+          ECR_REPOSITORY: happenings-repo
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
