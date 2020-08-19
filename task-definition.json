@@ -21,7 +21,8 @@
   "compatibilities": [
     "EC2"
   ],
-  "family": "happening-api-definition",
+  "taskDefinitionArn": "task-definition/happeningsServer",
+  "family": "happeningsServer",
   "requiresCompatibilities": [
     "EC2"
   ],
