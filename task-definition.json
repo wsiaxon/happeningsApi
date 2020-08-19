@@ -6,11 +6,9 @@
       "image": "github-actions-continuous-delivery",
       "resourceRequirements": null,
       "essential": true,
-      "cpu": 500,
-      "memoryReservation": 1024,
       "portMappings": [
         {
-          "hostPort": "0",
+          "hostPort": "8080",
           "containerPort": "8080",
           "protocol": "tcp"
         }
