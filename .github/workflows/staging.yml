@@ -89,7 +89,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: happeningsContainer
+          container-name: happenings-container
           image: nginx:latest
           # image: ${{ steps.build-image.outputs.image }}
 
@@ -97,6 +97,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: happeningsService
-          cluster: happeningsCluster
+          service: happenings-api-service
+          cluster: happenings-app-cluster
           wait-for-service-stability: true
