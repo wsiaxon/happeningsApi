@@ -1,9 +1,9 @@
 FROM node:12
 
-RUN apt-get update -y && apt-get upgrade -y
+# RUN apt-get update -y && apt-get upgrade -y
 
 # Create app directory
-WORKDIR /src
+WORKDIR /usr/src/app
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -18,4 +18,5 @@ RUN npm install
 COPY . .
 
 EXPOSE 8080
-CMD [ "node", "/index.js" ]
+
+CMD ["npm", "start"]

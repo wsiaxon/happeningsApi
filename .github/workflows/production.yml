@@ -54,7 +54,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: happenings-repo
+          ECR_REPOSITORY: happeningsapi-repo
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
@@ -68,13 +68,13 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: happenings-backend
+          container-name: happeningsApiContainer
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: happenings-backend-service
-          cluster: happenings
+          service: happeningsApiService
+          cluster: happeningsCluster
           wait-for-service-stability: true
