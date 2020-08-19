@@ -1,18 +1,23 @@
 {
   "executionRoleArn": "ecsTaskExecutionRole",
-  "containerDefinitions": [{
-    "name": "happenings-container",
-    "image": "github-actions-continuous-delivery",
-    "resourceRequirements": null,
-    "essential": true,
-    "cpu": 500,
-    "memoryReservation": 1024,
-    "portMappings": [{
-      "hostPort": "0",
-      "containerPort": "8080",
-      "protocol": "tcp"
-    }]
-  }],
+  "containerDefinitions": [
+    {
+      "name": "happenings-container",
+      "image": "github-actions-continuous-delivery",
+      "resourceRequirements": null,
+      "essential": true,
+      "cpu": 500,
+      "memoryReservation": 1024,
+      "portMappings": [
+        {
+          "hostPort": "0",
+          "containerPort": "8080",
+          "protocol": "tcp"
+        }
+      ]
+    }
+  ],
+  "memory": "300",
   "taskRoleArn": "ecsTaskExecutionRole",
   "compatibilities": [
     "EC2"
@@ -22,7 +27,7 @@
     "EC2"
   ],
   "networkMode": "bridge",
-  "cpu": "null",
+  "cpu": "1024",
   "status": "ACTIVE",
   "volumes": []
 }
