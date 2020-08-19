@@ -1,0 +1,22 @@
+{
+  "ipcMode": null,
+  "executionRoleArn": "ecsTaskExecutionRole",
+  "containerDefinitions": [{
+    "portMappings": [{
+      "hostPort": 0,
+      "protocol": "tcp",
+      "containerPort": 8080
+    }],
+    "name": "happenings-container"
+  }],
+  "taskRoleArn": "ecsTaskExecutionRole",
+  "compatibilities": [
+    "EC2"
+  ],
+  "family": "happening-api-definition",
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "networkMode": "bridge",
+  "volumes": []
+}
