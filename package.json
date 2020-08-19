@@ -28,5 +28,8 @@
     "eslint": "^7.6.0",
     "ghook": "0.0.2",
     "prettier": "^2.0.5"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
