@@ -1,21 +1,52 @@
 {
+  "ipcMode": null,
   "executionRoleArn": "ecsTaskExecutionRole",
-  "containerDefinitions": [
-    {
-      "name": "happenings-container",
-      "image": "github-actions-continuous-delivery",
-      "resourceRequirements": null,
-      "essential": true,
-      "portMappings": [
-        {
-          "hostPort": "8080",
-          "containerPort": "8080",
-          "protocol": "tcp"
-        }
-      ]
-    }
-  ],
-  "memory": "300",
+  "containerDefinitions": [{
+    "dnsSearchDomains": null,
+    "environmentFiles": null,
+    "logConfiguration": null,
+    "entryPoint": null,
+    "portMappings": [{
+      "hostPort": 0,
+      "protocol": "tcp",
+      "containerPort": 8080
+    }],
+    "command": null,
+    "linuxParameters": null,
+    "cpu": 500,
+    "environment": [],
+    "resourceRequirements": null,
+    "ulimits": null,
+    "dnsServers": null,
+    "mountPoints": [],
+    "workingDirectory": null,
+    "secrets": null,
+    "dockerSecurityOptions": null,
+    "memory": null,
+    "memoryReservation": 1024,
+    "volumesFrom": [],
+    "stopTimeout": null,
+    "image": "github-actions-continuous-delivery",
+    "startTimeout": null,
+    "firelensConfiguration": null,
+    "dependsOn": null,
+    "disableNetworking": null,
+    "interactive": null,
+    "healthCheck": null,
+    "essential": true,
+    "links": null,
+    "hostname": null,
+    "extraHosts": null,
+    "pseudoTerminal": null,
+    "user": null,
+    "readonlyRootFilesystem": null,
+    "dockerLabels": null,
+    "systemControls": null,
+    "privileged": null,
+    "name": "happenings-container"
+  }],
+  "placementConstraints": [],
+  "memory": null,
   "taskRoleArn": "ecsTaskExecutionRole",
   "compatibilities": [
     "EC2"
@@ -25,7 +56,10 @@
     "EC2"
   ],
   "networkMode": "bridge",
-  "cpu": "1024",
+  "cpu": null,
+  "revision": 2,
   "status": "ACTIVE",
+  "inferenceAccelerators": null,
+  "proxyConfiguration": null,
   "volumes": []
 }
