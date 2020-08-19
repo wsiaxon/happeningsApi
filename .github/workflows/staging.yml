@@ -36,6 +36,6 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t "$GITHUB_REPOSITORY:$IMAGE_TAG" .
+          docker build -t "$IMAGE_TAG" .
 
 
