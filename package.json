@@ -1,11 +1,20 @@
 {
   "name": "happenings",
   "version": "1.0.0",
-  "description": "Online platform that provide latest gist, entertainment, sport and politics news that cannot be found any where",
+  "description": "Online platform that provide latest gist, entertainment, sport and politics news that cannot be found anywhere",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "lint": "eslint \"**/*.ts\""
+    "build": "babel src --out-dir dist",
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo": "sequelize db:migrate:undo:all",
+    "db:reset": "npm run db:migrate:undo && npm run db:migrate",
+    "db:seed": "sequelize db:seed:all",
+    "dev": "nodemon --exec babel-node src/server.js",
+    "lint": "eslint \"**/*.ts\"",
+    "prestart": "npm run build",
+    "start": "node dist/server.js",
+    "test": "jest",
+    "test:cover": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -19,13 +28,43 @@
   },
   "homepage": "https://github.com/wsiaxon/happeningsApi#readme",
   "dependencies": {
+    "@babel/runtime": "^7.11.2",
+    "@sendgrid/mail": "^7.2.3",
+    "axios": "^0.18.1",
+    "bcryptjs": "^2.4.3",
+    "cluster": "^0.7.7",
+    "cors": "^2.8.5",
+    "crypto-random-string": "^3.2.0",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "rimraf": "^3.0.2"
+    "express-session": "^1.17.1",
+    "express-validator": "^6.6.1",
+    "google-auth-library": "^6.0.6",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-oauth": "^1.0.0",
+    "passport-twitter": "^1.0.4",
+    "pg": "^8.3.0",
+    "sequelize": "^6.3.4"
   },
   "devDependencies": {
-    "eslint": "^7.6.0",
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
+    "@babel/plugin-transform-runtime": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/register": "^7.10.5",
+    "babel-jest": "^24.9.0",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
     "ghook": "0.0.2",
-    "prettier": "^2.0.5"
+    "nodemon": "^2.0.4",
+    "sequelize-cli": "^6.2.0"
   },
   "engines": {
     "node": "12.x"
