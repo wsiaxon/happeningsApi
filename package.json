@@ -2,7 +2,7 @@
   "name": "happenings",
   "version": "1.0.0",
   "description": "Online platform that provide latest gist, entertainment, sport and politics news that cannot be found anywhere",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "build": "babel src --out-dir dist",
     "db:migrate": "sequelize db:migrate",

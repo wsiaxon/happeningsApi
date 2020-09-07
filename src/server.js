@@ -3,7 +3,7 @@ const debug = require('debug')('dev');
 const os = require('os');
 const app = require('./app');
 
-const PORT = process.env.APP_PORT || 8080;
+const PORT = process.env.PORT || process.env.APP_PORT || 8080;
 
 if (cluster.isMaster && process.env.NODE_ENV === 'production') {
   const numWorkers = os.cpus().length;
