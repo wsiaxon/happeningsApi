@@ -1,0 +1,367 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Happenings API",
+    "description": "an online platform that provide latest gist, entertainment, sport and politics news that cannot be found anywhere.",
+    "contact": {
+      "email": "you@your-company.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/meetKazuki/Happenings/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "tags": [
+    {
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "users",
+      "description": "Endpoints that can be accessed by users"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "signup endpoint for users",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "example": "Test"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "Developer"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "testdeveloper@happenings.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "strongpassword"
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success. User created successfully."
+          },
+          "400": {
+            "description": "Validation error (incorrect/malformed request)."
+          },
+          "409": {
+            "description": "Conflict. Email used for signup already exist in the database."
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "sign-in endpoint for users",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "testdeveloper@happenings.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "strongpassword"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. User logged-in successfully."
+          },
+          "400": {
+            "description": "Validation error (incorrect/malformed request)."
+          },
+          "401": {
+            "description": "Unauthorized. Incorrect email or password."
+          }
+        }
+      }
+    },
+    "/auth/verify_email/{token}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Endpoint to verify user email address.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Verification token sent in the welcome mail after signup.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. User successfully verified."
+          },
+          "400": {
+            "description": "Error. Verification link is invalid/expired or user is already verified."
+          }
+        }
+      }
+    },
+    "/auth/resend_email": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Endpoint to resend verification email",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "testdeveloper@happenings.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Verification email successfully sent."
+          },
+          "400": {
+            "description": "Bad request. Email is supplied as payload or email is already verified in the database."
+          },
+          "404": {
+            "description": "Error. User with email not found in the database."
+          }
+        }
+      }
+    },
+    "/auth/forgot_password": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Endpoint to request for a password change in the event a user cannot login with his correct credentials.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "testdeveloper@happenings.com"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Reset-link sent successfully."
+          },
+          "400": {
+            "description": "Validation error (incorrect/malformed request)."
+          },
+          "404": {
+            "description": "Not Found Error. User with email doesn't exist."
+          }
+        }
+      }
+    },
+    "/auth/reset_password/{id}/{token}": {
+      "patch": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Endpoint to change the password for a non-loggedin user.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user sent as part of the verification token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Verification email sent in email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "strongpassword"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Password updated successfully."
+          },
+          "404": {
+            "description": "Not Found Error. User with email doesn't exist in the database."
+          }
+        }
+      }
+    },
+    "/auth/change_password": {
+      "patch": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Endpoint to change the password of a logged-in user.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "example": "strongpassword"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "newstrongpassword"
+                  }
+                },
+                "required": [
+                  "oldPassword",
+                  "newPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Password update was successful."
+          },
+          "400": {
+            "description": "Bad request. \"oldPassword\" does not match user's password in the database or \"oldPassword\" is the same as the \"newPassword\"."
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": [
+          "admins"
+        ],
+        "summary": "Endpoint to get all the users in the database.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Users fetched successfully."
+          },
+          "403": {
+            "description": "Forbidden. A non-admin is trying to access endpoint."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

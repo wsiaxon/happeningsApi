@@ -3,8 +3,10 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 import session from 'express-session';
+import swaggerUi from 'swagger-ui-express';
 import errorHandler from './middleware/errorHandler';
 import routes from './routes';
+import swaggerDoc from '../docs/happening-v1.json';
 
 dotenv.config();
 
@@ -22,6 +24,7 @@ app.use(session({
 }));
 
 app.use(routes);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.get('/', (_, response) => {
   response.status(200).json({

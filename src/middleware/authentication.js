@@ -6,6 +6,13 @@ const { User } = require('../models');
 config();
 
 module.exports = {
+  /**
+   * @param {Object} request express request object
+   * @param {Object} response express response object
+   * @param {Function} next callback to call next middleware
+   *
+   * @returns {Object} response from the server
+   */
   verifyToken: (request, response, next) => {
     const authHeader = request.headers.authorization;
     if (!authHeader) throw new ApplicationError(412, 'authorization header not set');
@@ -23,5 +30,34 @@ module.exports = {
 
       return next();
     });
+  },
+
+  /**
+   * @description checks if user is an admin
+   *
+   * @param {Object} request express request object
+   * @param {Object} response express response object
+   * @param {Function} callback to next middleware
+   *
+   * @returns {Object}
+   */
+  isAdmin: (request, response, next) => {
+    const { isAdmin } = request.user;
+    if (!isAdmin) {
+      throw new ApplicationError(403, 'unauthorized. for admin account only');
+    }
+    next();
+  },
+
+  /**
+   * @description
+   *
+   * @param {Array}
+   *
+   * @returns null
+   */
+  permit: (...permitted) => (request, response, next) => {
+    if (permitted.indexOf(request.role) !== -1) return next();
+    throw new ApplicationError(403, 'access denied');
   },
 };

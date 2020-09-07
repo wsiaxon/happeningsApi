@@ -1,12 +1,11 @@
-const debug = require('debug')('dev');
 const { ApplicationError, NotFoundError } = require('../helpers/error');
-const { createOrFindUser, facebookAuth, googleAuth  } = require('../services/authentication');
+const {
+  createOrFindUser, facebookAuth, googleAuth,
+} = require('../services/authentication');
 const models = require('../models');
 const notification = require('../services/Notification');
 const {
-  urlSafeRandomString,
-  generateToken,
-  emailVerificationLink,
+  urlSafeRandomString, generateToken, emailVerificationLink,
 } = require('../helpers/auth');
 
 const { User } = models;
@@ -122,31 +121,6 @@ module.exports = {
     });
   },
 
-  changePassword: async (request, response) => {
-    const { id } = request.user;
-    const { oldPassword, newPassword } = request.body;
-
-    const user = await User.findByPk(id);
-    if (!user) throw new NotFoundError(`user with id ${id} does not exist`);
-
-    const checkOldPassword = await user.validatePassword(oldPassword);
-    if (!checkOldPassword) {
-      throw new ApplicationError(401, 'the old password you entered is wrong');
-    }
-
-    const checkNewPassword = await user.validatePassword(newPassword);
-    if (checkNewPassword) {
-      throw new ApplicationError(400, "you can't use the old password again");
-    }
-
-    await user.update({ password: newPassword });
-
-    return response.status(200).json({
-      status: 'success',
-      message: 'password update successful',
-    });
-  },
-
   forgotPassword: async (request, response) => {
     const { email } = request.body;
 
@@ -184,6 +158,31 @@ module.exports = {
     return response.status(200).json({
       status: 'success',
       message: 'password updated successfully',
+    });
+  },
+
+  changePassword: async (request, response) => {
+    const { id } = request.user;
+    const { oldPassword, newPassword } = request.body;
+
+    const user = await User.findByPk(id);
+    if (!user) throw new NotFoundError(`user with id ${id} does not exist`);
+
+    const checkOldPassword = await user.validatePassword(oldPassword);
+    if (!checkOldPassword) {
+      throw new ApplicationError(400, 'the old password you entered is wrong');
+    }
+
+    const checkNewPassword = await user.validatePassword(newPassword);
+    if (checkNewPassword) {
+      throw new ApplicationError(400, "you can't use the old password again");
+    }
+
+    await user.update({ password: newPassword });
+
+    return response.status(200).json({
+      status: 'success',
+      message: 'password update successful',
     });
   },
 };

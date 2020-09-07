@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const { config } = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { Model } = require('sequelize');
-const { verifyPassword, urlSafeRandomString } = require('../helpers/auth');
+const { urlSafeRandomString } = require('../helpers/auth');
 
 config();
 
@@ -127,8 +127,8 @@ module.exports = (sequelize, DataTypes) => {
    *
    * @param {String} password
    */
-  User.prototype.validatePassword = function validatePassword(password) {
-    return verifyPassword(this.password, password);
+  User.prototype.validatePassword = async function validatePassword(password) {
+    return bcrypt.compare(this.password, password);
   };
 
   /**

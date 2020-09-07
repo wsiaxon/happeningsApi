@@ -94,7 +94,7 @@ router.patch(
 );
 
 router.patch(
-  '/update_password',
+  '/update_password/:id/:token',
   validator(passwordSchema),
   asyncWrapper(resetPassword),
 );
