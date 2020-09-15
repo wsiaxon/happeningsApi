@@ -2,11 +2,11 @@ const { ApplicationError, NotFoundError } = require('../helpers/error');
 const {
   createOrFindUser, facebookAuth, googleAuth,
 } = require('../services/authentication');
+const {
+  emailVerificationLink, urlSafeRandomString, generateToken,
+} = require('../helpers/auth');
 const models = require('../models');
 const notification = require('../services/Notification');
-const {
-  urlSafeRandomString, generateToken, emailVerificationLink,
-} = require('../helpers/auth');
 
 const { User } = models;
 

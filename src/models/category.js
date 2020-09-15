@@ -3,7 +3,13 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Category extends Model {
     static associate(models) {
-      // define association here
+      this.belongsToMany(models.Story, {
+        as: 'story',
+        through: 'StoryCategories',
+        foreignKey: 'storyId',
+        otherKey: 'categoryId',
+        onDelete: 'CASCADE',
+      });
     }
   }
 
@@ -32,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Category',
   });
+
+  Category.checkTagsExistence = async (tag) => {
+    const availableCategory = await Category.findAll({ where: { id: tag } });
+    return availableCategory;
+  };
 
   return Category;
 };

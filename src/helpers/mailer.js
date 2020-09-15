@@ -1,5 +1,4 @@
 const { config } = require('dotenv');
-const debug = require('debug')('dev');
 const sgMail = require('@sendgrid/mail');
 
 config();

@@ -37,11 +37,11 @@ const paginator = async (Source, options) => {
       ...otherOptions,
       limit,
       offset,
-      order: [['createdAt', 'DESC'], ['firstName', 'ASC']],
+      order: [['createdAt', 'DESC']],
     });
   }
 
   return { data, count };
 };
 
-export default paginator;
+module.exports = paginator;

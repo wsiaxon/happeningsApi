@@ -9,7 +9,11 @@ config();
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // define association here
+      this.hasMany(models.Story, {
+        foreignKey: 'authorId',
+        as: 'stories',
+        onDelete: 'CASCADE',
+      });
     }
   }
 
@@ -36,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     profilePic: {
       type: DataTypes.STRING,
+      get() {
+        return this.getDataValue('profilePic') || 'https://placeholder.com/150';
+      },
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,

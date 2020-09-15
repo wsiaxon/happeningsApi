@@ -9,9 +9,8 @@
     "db:migrate:undo": "sequelize db:migrate:undo:all",
     "db:reset": "npm run db:migrate:undo && npm run db:migrate",
     "db:seed": "sequelize db:seed:all",
-    "dev": "nodemon --exec babel-node src/server.js",
+    "dev": "DEBUG=dev nodemon --exec babel-node src/server.js",
     "lint": "eslint \"**/*.ts\"",
-    "prestart": "npm run build",
     "start": "node dist/server.js",
     "test": "jest",
     "test:cover": "jest --coverage"
@@ -49,7 +48,8 @@
     "passport-twitter": "^1.0.4",
     "pg": "^8.3.0",
     "sequelize": "^6.3.4",
-    "swagger-ui-express": "^4.1.4"
+    "swagger-ui-express": "^4.1.4",
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",

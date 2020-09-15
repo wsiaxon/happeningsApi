@@ -3,7 +3,7 @@
  * @description base error class for application
  * @extends Error
  */
-export class ApplicationError extends Error {
+class ApplicationError extends Error {
   /**
    * @description initializes the error class
    *
@@ -24,7 +24,7 @@ export class ApplicationError extends Error {
  * @description error class for resource not found
  * @extends ApplicationError
  */
-export class NotFoundError extends ApplicationError {
+class NotFoundError extends ApplicationError {
   /**
    * @description initialize error class
    *
@@ -34,3 +34,5 @@ export class NotFoundError extends ApplicationError {
     super(404, message || 'resource not found');
   }
 }
+
+module.exports = { ApplicationError, NotFoundError };

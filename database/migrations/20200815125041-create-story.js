@@ -18,12 +18,6 @@ module.exports = {
       type: {
         type: Sequelize.STRING,
       },
-      categories: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-      },
-      tags: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-      },
       slug: {
         type: Sequelize.STRING,
       },
@@ -33,8 +27,11 @@ module.exports = {
       subTitle: {
         type: Sequelize.STRING,
       },
-      author: {
-        type: Sequelize.STRING,
+      content: {
+        type: Sequelize.TEXT,
+      },
+      authorId: {
+        type: Sequelize.UUID,
       },
       guestAuthor: {
         type: Sequelize.STRING,

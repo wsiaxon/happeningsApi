@@ -3,7 +3,25 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Story extends Model {
     static associate(models) {
-      // define association here
+      this.belongsTo(models.User, {
+        foreignKey: 'authorId',
+        as: 'author',
+        onDelete: 'CASCADE',
+      });
+
+      this.hasMany(models.StoryCategories, {
+        foreignKey: 'storyId',
+        as: 'category',
+        onDelete: 'CASCADE',
+      });
+
+      this.belongsToMany(models.Category, {
+        as: 'categories',
+        through: 'StoryCategories',
+        foreignKey: 'storyId',
+        otherKey: 'categoryId',
+        onDelete: 'CASCADE',
+      });
     }
   }
 
@@ -22,16 +40,9 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.STRING,
     },
-    categories: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
-    tags: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
     slug: {
       type: DataTypes.STRING,
+      unique: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -39,7 +50,10 @@ module.exports = (sequelize, DataTypes) => {
     subTitle: {
       type: DataTypes.STRING,
     },
-    author: {
+    content: {
+      type: DataTypes.TEXT,
+    },
+    authorId: {
       type: DataTypes.STRING,
     },
     guestAuthor: {
@@ -47,9 +61,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     bannerImageId: {
       type: DataTypes.STRING,
+      get() {
+        return this.getDataValue('bannerImageId') || 'https://placeholder.com/350';
+      },
     },
     status: {
-      type: DataTypes.ENUM('draft', 'scheduled', 'pending', 'approved'),
+      type: DataTypes.ENUM('draft', 'scheduled', 'pending', 'approved', 'rejected'),
       defaultValue: 'draft',
     },
     createdAt: {

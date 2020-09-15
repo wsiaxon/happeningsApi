@@ -8,6 +8,7 @@ config();
 /**
  * @deprecated
  * @function hashPassword
+ * @description hash password using Argon2i
  *
  * @param {String} password
  */
@@ -20,6 +21,7 @@ async function hashPassword(password) {
 /**
  * @deprecated
  * @function verifyPassword
+ * @description verify hashed password using Argon2i
  *
  * @param {String} encodedPassword
  * @param {String} password
