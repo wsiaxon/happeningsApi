@@ -86,7 +86,3 @@ Each response will be returned with one of the following HTTP status codes:
     }
   }
 }
-```
-## Misc😏
-
-For any clarifications, reach out here `meetdesmond.edem@gmail.com`
