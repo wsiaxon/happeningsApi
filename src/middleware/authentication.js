@@ -1,7 +1,7 @@
 const { config } = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { ApplicationError } = require('../helpers/error');
-const { User } = require('../models');
+const { User, Story } = require('../models');
 
 config();
 
@@ -33,6 +33,19 @@ module.exports = {
   },
 
   /**
+   * @function permit
+   * @description middleware for authorizing user based on roles
+   *
+   * @param {Array} permitted array of roles
+   *
+   * @returns null
+   */
+  permit: (...permitted) => (request, response, next) => {
+    if (permitted.indexOf(request.role) !== -1) return next();
+    throw new ApplicationError(403, 'access denied');
+  },
+
+  /**
    * @description checks if user is an admin
    *
    * @param {Object} request express request object
@@ -50,14 +63,26 @@ module.exports = {
   },
 
   /**
-   * @description
+   * @function isAuthor
+   * @description Checks if user is the author of the article
    *
-   * @param {Array}
+   * @param {Object} request - the request object to the server
+   * @param {Object} response - express response object
+   * @param {Function} next
    *
-   * @returns null
+   * @returns {void} - passes control to the next middleware
    */
-  permit: (...permitted) => (request, response, next) => {
-    if (permitted.indexOf(request.role) !== -1) return next();
-    throw new ApplicationError(403, 'access denied');
+  isAuthor: async (request, response, next) => {
+    const { id } = request.user;
+    const { slug } = request.params;
+
+    const storyResponse = await Story.findOneStory(slug);
+    request.storyInstance = storyResponse;
+
+    if (!storyResponse) throw new ApplicationError(404, 'story not found');
+    if (storyResponse.authorId !== id) {
+      throw new ApplicationError(403, 'unauthorized access. for author only');
+    }
+    next();
   },
 };

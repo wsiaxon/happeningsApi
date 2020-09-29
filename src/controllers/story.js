@@ -13,7 +13,7 @@ module.exports = {
    *
    * @todo add categories and tags when creating a story✅
    * @todo implement model associations✅
-   * @todo create seeders file for tags in the db
+   * @todo create seeders file for tags in the db✅
    *
    * @param {Object} request
    * @param {Object} response
@@ -60,13 +60,8 @@ module.exports = {
     const { status } = request.query;
     let articles;
 
-    if (!status) {
-      articles = await Story.findAll({});
-    } else {
-      articles = await Story.findAll({
-        where: { status },
-      });
-    }
+    if (!status) articles = await Story.findAll();
+    else articles = await Story.findAll({ where: { status } });
 
     const message = articles.length
       ? `stor${articles.length > 1 ? 'ies' : 'y'} successfully retrieved`
@@ -141,23 +136,21 @@ module.exports = {
    * @function editStory
    * @description controller for editing a story
    *
+   * @todo check model, middleware and controller✅
+   * @todo add more validation
+   *
    * @param {Object} request
    * @param {Object} response
    *
    * @returns {Object} callback that executes the controller
    */
   editStory: async (request, response) => {
+    const { tag } = request.body;
     const {
-      tag,
-      storyId,
-      authorId,
-      slug,
-      id,
-      ...story
+      storyId, authorId, slug, id, ...story
     } = request.body;
 
-    const storyResponse = await Story.update({ story });
-
+    const storyResponse = await Story.updateArticle(request.storyInstance, story);
     let tagName = [];
     if (tag) {
       await StoryCategories.deleteTags(storyResponse.id);
@@ -166,7 +159,7 @@ module.exports = {
       );
       tagName = await getTagName(tagResponse);
     } else {
-      const value = StoryCategories.findTags(storyResponse.id);
+      const value = await StoryCategories.findTags(storyResponse.id);
       const createdTags = value.map((eachTag) => eachTag.dataValues.categoryId);
       tagName = await getTagName(createdTags);
     }

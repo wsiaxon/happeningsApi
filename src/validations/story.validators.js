@@ -35,4 +35,30 @@ module.exports = {
       .isIn(['draft', 'scheduled', 'pending', 'approved', 'rejected'])
       .withMessage("invalid 'status' value. expected: 'draft', 'scheduled', 'pending', 'approved', 'rejected'"),
   ],
+
+  editStorySchema: [
+    check('title')
+      .optional()
+      .trim()
+      .matches(/[a-zA-Z]{3}/)
+      .withMessage('story title must contain at least a 3 letter word')
+      .isLength({ min: 5, max: 50 })
+      .withMessage('story title should be between 5 to 50 characters'),
+
+    check('content')
+      .optional()
+      .trim()
+      .isLength({ min: 50, max: 1024 })
+      .withMessage('story body should be between 50 to 1024 characters'),
+
+    check('tag')
+      .optional()
+      .isArray()
+      .withMessage('tag must be an array'),
+
+    check('status')
+      .optional()
+      .matches(/^(draft|published)$/)
+      .withMessage('Status must be either "draft" or "published"'),
+  ],
 };

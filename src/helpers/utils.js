@@ -7,7 +7,7 @@ module.exports = {
    * @function slugify
    * @description function to generate human-readable, unique identifier, used
    * to identify a resource instead of a less human-readable identifier like an id
-   * -> https://github.com/meetKazuki/vali-ah-backend/blob/develop/src/helpers/slugify.js
+   * -> https://bit.ly/3iwZab8
    *
    * @param{String} input - string to slugify
    *
@@ -44,7 +44,7 @@ module.exports = {
    */
   getTagName: async (tags) => {
     const response = await Category.checkTagsExistence(tags);
-    const tagNames = response.map((eachTag) => eachTag.category);
+    const tagNames = response.map((eachTag) => eachTag.name);
     return tagNames;
   },
 };

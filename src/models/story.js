@@ -1,4 +1,5 @@
 const { Model } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Story extends Model {
@@ -69,10 +70,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('draft', 'scheduled', 'pending', 'approved', 'rejected'),
       defaultValue: 'draft',
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: Date(),
-    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
@@ -81,6 +78,18 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Story',
   });
+
+  Story.findOneStory = async (slug, options = {}) => {
+    const story = await Story.findOne({
+      where: { slug: { [Sequelize.Op.iLike]: slug }, ...options },
+    });
+    return story;
+  };
+
+  Story.updateArticle = async (storyInstance, story) => {
+    story = await storyInstance.update(story, { returning: true });
+    return story;
+  };
 
   return Story;
 };

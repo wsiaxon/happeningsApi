@@ -7,14 +7,15 @@ const validator = require('../middleware/validator');
 
 const router = Router();
 
-const { verifyToken } = authentication;
 const {
-  createStory,
-  getAllStories,
-  getStoryBySlug,
-  editStory,
+  verifyToken, isAuthor,
+} = authentication;
+const {
+  createStory, getAllStories, getStoryBySlug, editStory,
 } = storyController;
-const { createStorySchema, getAllStoriesSchema } = storySchema;
+const {
+  createStorySchema, getAllStoriesSchema, editStorySchema,
+} = storySchema;
 
 router.post(
   '/',
@@ -37,6 +38,8 @@ router.get(
 router.put(
   '/:slug',
   verifyToken,
+  asyncWrapper(isAuthor),
+  validator(editStorySchema),
   asyncWrapper(editStory),
 );
 

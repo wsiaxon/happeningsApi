@@ -115,7 +115,9 @@ module.exports = (sequelize, DataTypes) => {
    * @description
    */
   User.prototype.toJSON = function toJSON() {
-    const { password, ...safedata } = this.get();
+    const {
+      password, verifyToken, expireVerifyToken, ...safedata
+    } = this.get();
     return safedata;
   };
 
@@ -135,7 +137,7 @@ module.exports = (sequelize, DataTypes) => {
    * @param {String} password
    */
   User.prototype.validatePassword = async function validatePassword(password) {
-    return bcrypt.compare(this.password, password);
+    return bcrypt.compare(password, this.password);
   };
 
   /**

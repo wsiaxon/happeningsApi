@@ -87,7 +87,9 @@ database/dbml
 database/dump
 
 # Dev files
-package-lock.json
 database.sqlite
+HappeningsAPI.session.sql
+package-lock.json
 
 dist/
+.vscode/

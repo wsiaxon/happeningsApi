@@ -10,22 +10,11 @@ const router = Router();
 
 const { verifyToken } = authentication;
 const {
-  signup,
-  signin,
-  socialLogin,
-  twitterLogin,
-  verifyEmail,
-  resendEmailVerification,
-  changePassword,
-  forgotPassword,
-  resetPassword,
+  signup, signin, socialLogin, twitterLogin, verifyEmail,
+  resendEmailVerification, changePassword, forgotPassword, resetPassword,
 } = authController;
 const {
-  signupSchema,
-  signinSchema,
-  changePasswordSchema,
-  emailSchema,
-  passwordSchema,
+  signupSchema, signinSchema, changePasswordSchema, emailSchema, passwordSchema,
 } = authValidator;
 
 router.post(

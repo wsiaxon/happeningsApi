@@ -25,15 +25,13 @@ export default {
   getOneUser: async (request, response) => {
     const { userId } = request.params;
 
-    const user = await User.findByPk(userId, {
-      attributes: { exclude: ['password'] },
-    });
+    const user = await User.findByPk(userId);
 
     if (!user) throw new NotFoundError(`user with id ${userId} doesn't exist`);
 
     return response.status(200).json({
       status: 'success',
-      data: user,
+      data: user.toJSON(),
     });
   },
 };

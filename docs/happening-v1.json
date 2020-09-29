@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Happenings API",
-    "description": "an online platform that provide latest gist, entertainment, sport and politics news that cannot be found anywhere.",
+    "description": "an online platform that provides latest gist, entertainment, sport and politics news that cannot be found anywhere.",
     "contact": {
       "email": "you@your-company.com"
     },
@@ -14,8 +14,22 @@
   },
   "servers": [
     {
-      "url": "https://happeningslb-2007236471.eu-west-1.elb.amazonaws.com",
-      "description": "Backend API"
+      "description": "Localhost Development Environment",
+      "url": "http://localhost:{port}",
+      "variables": {
+        "port": {
+          "enum": [
+            "3000",
+            "4000",
+            "5000"
+          ],
+          "default": "5000"
+        }
+      }
+    },
+    {
+      "url": "https://virtserver.swaggerhub.com/meetKazuki/Happenings/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
     }
   ],
   "tags": [
@@ -230,7 +244,7 @@
         "tags": [
           "users"
         ],
-        "summary": "Endpoint to change the password for a non-loggedin user.",
+        "summary": "Endpoint to change the password for a non logged-in user.",
         "parameters": [
           {
             "name": "id",
@@ -404,18 +418,9 @@
                       "Guest Author 2"
                     ]
                   },
-                  "categories": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "example": [
-                      "Fiction",
-                      "Non-fiction"
-                    ]
-                  },
                   "tags": {
                     "type": "array",
+                    "description": "array of uuid's representing story 3categories.",
                     "items": {
                       "type": "string"
                     },
@@ -515,6 +520,45 @@
           },
           "401": {
             "description": "Authorization Error. User making request is not authenticated"
+          },
+          "404": {
+            "description": "Not Found Error. Story with slug does not exist in the database."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "stories"
+        ],
+        "summary": "Endpoint to update a story by its slug",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "description": "Unique identifier (slug) of the story",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Story successfully updated."
+          },
+          "400": {
+            "description": "Validation Error."
+          },
+          "401": {
+            "description": "Unauthorized. Request has not been authenticated."
+          },
+          "403": {
+            "description": "Access denied. Story doesn't belong to who is trying to access the resource."
           },
           "404": {
             "description": "Not Found Error. Story with slug does not exist in the database."

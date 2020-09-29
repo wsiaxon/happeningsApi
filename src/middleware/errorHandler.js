@@ -27,7 +27,7 @@ export default (err, request, response, next) => {
   }
 
   if (!isProduction) {
-    console.log(err.stack);
+    debug(err.stack);
     errorMessage = err;
   }
 

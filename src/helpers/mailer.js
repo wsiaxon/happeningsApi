@@ -1,4 +1,5 @@
 const { config } = require('dotenv');
+const debug = require('debug')('dev');
 const sgMail = require('@sendgrid/mail');
 
 config();
@@ -30,7 +31,7 @@ module.exports = async ({ type, payload, template }) => {
 
     await sgMail.send(messagePayload);
   } catch (error) {
-    console.log(`mailer: ${error}`);
+    debug(`mailer: ${error}`);
     return error;
   }
 

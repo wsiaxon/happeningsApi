@@ -2,7 +2,7 @@
 
 An online platform that provide latest gist, entertainment, sport and politics new news what can not be found anywhere.
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/c7e3b4f654c7de71c882#?env%5Bhappening-api%5D=W3sia2V5IjoibG9jYWxfdXJsIiwidmFsdWUiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJlbmFibGVkIjp0cnVlfV0=)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/c7e3b4f654c7de71c882#?env%5BHappenings%20Development%20Environment%5D=W3sia2V5IjoiTE9DQUxIT1NUIiwidmFsdWUiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJlbmFibGVkIjp0cnVlfSx7ImtleSI6IkFQSV9UT0tFTiIsInZhbHVlIjoiIiwiZW5hYmxlZCI6dHJ1ZX1d)
 
 ## Technologies Used
 
@@ -37,7 +37,7 @@ Ensure you have the following installed on your local machine:
     createdb -h localhost -p 5432 -U postgres <database-name>
   ```
 
-- Create/configure `.env` environment with your credentials. A sample `.env.local` file has been provided to get you started. Make a duplicate of `.env.local` and rename to `.env`, then configure your credentials.
+- Create/configure `.env` environment with your credentials. A sample `.env.example` file has been provided to get you started. Make a duplicate of `.env.example` and rename to `.env`, then configure your credentials.
 
 - Run `npm run dev` to start the server and watch for changes
 
