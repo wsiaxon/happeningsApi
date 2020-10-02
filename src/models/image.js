@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     caption: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     attribute: {
       type: DataTypes.STRING,

@@ -19,8 +19,7 @@
       "variables": {
         "port": {
           "enum": [
-            "3000",
-            "4000",
+            "8080",
             "5000"
           ],
           "default": "5000"
@@ -28,8 +27,12 @@
       }
     },
     {
-      "url": "https://virtserver.swaggerhub.com/meetKazuki/Happenings/1.0.0",
-      "description": "SwaggerHub API Auto Mocking"
+      "url": "https://happeningslb-2007236471.eu-west-1.elb.amazonaws.com",
+      "description": "Backend API"
+    },
+    {
+      "url": "https://happensapi.herokuapp.com",
+      "description": "Test Preview"
     }
   ],
   "tags": [

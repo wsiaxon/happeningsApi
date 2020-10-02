@@ -1,4 +1,5 @@
 const { Model } = require('sequelize');
+const { Sequelize } = require('.');
 
 module.exports = (sequelize, DataTypes) => {
   class Report extends Model {
@@ -24,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     createdAt: {
       type: DataTypes.DATE,
+      // defaultValue: Sequelize.NOW
     },
     details: {
       type: DataTypes.STRING,

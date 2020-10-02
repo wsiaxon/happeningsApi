@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         as: 'stories',
         onDelete: 'CASCADE',
       });
+      
+      this.belongsToMany(models.Role, {
+        foreignKey: 'userId',
+        through: 'UserRole'
+      });
     }
   }
 
@@ -41,21 +46,21 @@ module.exports = (sequelize, DataTypes) => {
     profilePic: {
       type: DataTypes.STRING,
       get() {
-        return this.getDataValue('profilePic') || 'https://placeholder.com/150';
+        return this.getDataValue('profilePic') || 'https://breakthrough.org/wp-content/uploads/2018/10/default-placeholder-image.png';
       },
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    verifyToken: {
+    emailVerifyToken: {
       type: DataTypes.STRING,
       defaultValue: null,
     },
     expireVerifyToken: {
       type: DataTypes.DATE,
     },
-    isVerified: {
+    isEmailVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },

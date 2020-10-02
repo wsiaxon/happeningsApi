@@ -3,7 +3,10 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Role extends Model {
     static associate(models) {
-      // define association here
+      this.belongsToMany(models.User, {
+        foreignKey: 'roleId',
+        through: 'UserRole'
+      });
     }
   }
 
@@ -17,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true
     },
     permissions: {
       type: DataTypes.ARRAY(DataTypes.STRING),

@@ -7,8 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         as: 'story',
         through: 'StoryCategories',
         foreignKey: 'storyId',
-        otherKey: 'categoryId',
-        onDelete: 'CASCADE',
+        otherKey: 'categoryId'
       });
     }
   }
@@ -23,13 +22,14 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true
     },
     slug: {
       type: DataTypes.STRING,
     },
     parent: {
       type: DataTypes.NUMBER,
-      allowNull: false,
+      allowNull: true,
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
@@ -39,10 +39,10 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Category',
   });
 
-  Category.checkTagsExistence = async (tag) => {
-    const availableCategory = await Category.findAll({ where: { id: tag } });
-    return availableCategory;
-  };
+  // Category.checkTagsExistence = async (tag) => {
+  //   const availableCategory = await Category.findAll({ where: { id: tag } });
+  //   return availableCategory;
+  // };
 
   return Category;
 };

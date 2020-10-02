@@ -1,5 +1,6 @@
 const { Model } = require('sequelize');
 const { Sequelize } = require('sequelize');
+const { StoryChannel, StoryStatus } = require('./enums');
 
 module.exports = (sequelize, DataTypes) => {
   class Story extends Model {
@@ -7,21 +8,19 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, {
         foreignKey: 'authorId',
         as: 'author',
-        onDelete: 'CASCADE',
+        onDelete: 'RESTRICT',
       });
 
-      this.hasMany(models.StoryCategories, {
+      this.hasMany(models.StorySection, {
         foreignKey: 'storyId',
-        as: 'category',
-        onDelete: 'CASCADE',
       });
 
       this.belongsToMany(models.Category, {
         as: 'categories',
         through: 'StoryCategories',
-        foreignKey: 'storyId',
-        otherKey: 'categoryId',
-        onDelete: 'CASCADE',
+        foreignKey: 'categoryId',
+        otherKey: 'storyId',
+        onDelete: 'RESTRICT',
       });
     }
   }
@@ -34,9 +33,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     channel: {
-      type: DataTypes.ENUM('BLOG', 'TV', 'RADIO'),
+      type: DataTypes.ENUM(Object.values(StoryChannel)),
       allowNull: false,
-      defaultValue: 'BLOG',
+      defaultValue: StoryChannel.Blog,
     },
     type: {
       type: DataTypes.STRING,
@@ -55,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
     },
     authorId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
     },
     guestAuthor: {
       type: DataTypes.STRING,
@@ -67,8 +66,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     status: {
-      type: DataTypes.ENUM('draft', 'scheduled', 'pending', 'approved', 'rejected'),
-      defaultValue: 'draft',
+      type: DataTypes.ENUM(Object.values(StoryStatus)),
+      defaultValue: StoryStatus.Open,
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
@@ -86,10 +85,60 @@ module.exports = (sequelize, DataTypes) => {
     return story;
   };
 
-  Story.updateArticle = async (storyInstance, story) => {
+  Story.updateStory = async (storyInstance, story) => {
     story = await storyInstance.update(story, { returning: true });
     return story;
   };
+
+  // /**
+  //  * @function createTags
+  //  * @description creates tags for a given story
+  //  *
+  //  * @param {Object} tag tags to be created
+  //  * @param {UUID} id id of the story to which tags belong
+  //  * @param {UUID} authorId id of the author
+  //  *
+  //  * @returns {Array} array of tags
+  //  */
+  // Story.createTags = async (tag, id, authorId) => {
+  //   const tags = tag.map((eachTag) => ({
+  //     storyId: id,
+  //     categoryId: eachTag,
+  //     authorId,
+  //   }));
+  //   const response = await Story.bulkCreate(tags);
+  //   const tagsCreated = response.map((eachTag) => eachTag.dataValues.categoryId);
+
+  //   return tagsCreated;
+  // };
+
+  // /**
+  //  * @function findTags
+  //  * @description find all tags belonging to a story
+  //  *
+  //  * @param {UUID} storyId id of the story to which tags belong
+  //  *
+  //  * @returns {Array} array of tags
+  //  */
+  // Story.findTags = async (storyId) => {
+  //   const tags = await Story.findAll({ where: { storyId } });
+  //   return tags;
+  // };
+
+  // /**
+  //  * @function deleteTags
+  //  * @description destroys all tags for given story
+  //  *
+  //  * @param {UUID} id id of the story to which tags belong
+  //  *
+  //  * @returns {Void} returns nothing
+  //  */
+  // Story.deleteTags = async (id) => {
+  //   await Story.destroy({
+  //     returning: true,
+  //     where: { storyId: id },
+  //   });
+  // };
 
   return Story;
 };

@@ -1,4 +1,5 @@
 const { Model } = require('sequelize');
+const { StorySectionType } = require('./enums');
 
 module.exports = (sequelize, DataTypes) => {
   class StorySection extends Model {
@@ -17,14 +18,19 @@ module.exports = (sequelize, DataTypes) => {
     storyId: {
       type: DataTypes.UUID,
     },
-    position: {
+    index: {
       type: DataTypes.NUMBER,
+      allowNull: false,
+      unique: true
+    },
+    content: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     type: {
-      type: DataTypes.ENUM('TEXT', 'IMAGE'),
+      type: DataTypes.ENUM(Object.values(StorySectionType)),
       allowNull: false,
-      defaultValue: 'TEXT',
+      defaultValue: StorySectionType.Text,
     },
   }, {
     sequelize,
