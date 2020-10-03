@@ -1,20 +1,17 @@
 const { Model } = require('sequelize');
+// const UserRole = require('./userrole');
 
 module.exports = (sequelize, DataTypes) => {
   class Role extends Model {
     static associate(models) {
-      this.belongsToMany(models.User, {
-        foreignKey: 'roleId',
-        through: 'UserRole'
-      });
+      this.belongsToMany(models.User, { through: 'UserRole', foreignKey: 'roleId', otherKey: 'userId' });
     }
   }
 
   Role.init({
     id: {
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     name: {

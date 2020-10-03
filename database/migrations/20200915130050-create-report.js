@@ -1,25 +1,35 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Comments', {
+    await queryInterface.createTable('Reports', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      userId: {
-        type: Sequelize.UUID,
-      },
-      parentId: {
-        type: Sequelize.STRING,
-      },
       storyId: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
+        references: {
+          model: 'Stories', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
       },
-      name: {
+      userId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
+        allowNull: true
+      },
+      guestUserName: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      reportType: {
         type: Sequelize.STRING,
       },
       details: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
@@ -36,6 +46,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Comments');
+    await queryInterface.dropTable('Reports');
   },
 };

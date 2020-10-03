@@ -3,45 +3,52 @@ const { config } = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { Model } = require('sequelize');
 const { urlSafeRandomString } = require('../helpers/auth');
+const { Gender } = require('./enums');
+// const UserRole = require('./userrole');
 
 config();
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      this.hasMany(models.Story, {
-        foreignKey: 'authorId',
-        as: 'stories',
-        onDelete: 'CASCADE',
+      this.belongsToMany(models.User, {
+        through: 'AuthorStory',
+        foreignKey: 'storyId',
+        otherKey: 'authorId',
       });
       
-      this.belongsToMany(models.Role, {
-        foreignKey: 'userId',
-        through: 'UserRole'
-      });
+      this.belongsToMany(models.Role, { through: 'UserRole', foreignKey: 'userId', otherKey: 'roleId' });
     }
   }
 
   User.init({
     id: {
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
     },
-    firstName: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: {
+    bio: {
       type: DataTypes.STRING,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     password: {
       type: DataTypes.STRING,
+    },
+    gender: {
+      type: DataTypes.ENUM(Object.values(Gender)),
+      allowNull: true,
     },
     profilePic: {
       type: DataTypes.STRING,
@@ -53,17 +60,46 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    emailVerifyToken: {
+    emailVerificationToken: {
       type: DataTypes.STRING,
       defaultValue: null,
     },
-    expireVerifyToken: {
+    emailTokenExpiryDate: {
       type: DataTypes.DATE,
     },
     isEmailVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    isLockedOut: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    failedCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    lockEndDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    isEmailVerified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
   }, {
     sequelize,
     modelName: 'User',
@@ -76,20 +112,20 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate(async (users) => {
     users.password = await users.generatePasswordHash();
 
-    if (!users.verifyToken) {
-      users.verifyToken = urlSafeRandomString({ length: 64 });
+    if (!users.emailVerificationToken) {
+      users.emailVerificationToken = urlSafeRandomString({ length: 64 });
     }
 
-    if (users.changed('verifyToken')) {
+    if (users.changed('emailVerificationToken')) {
       const expiryDate = new Date();
       expiryDate.setMinutes(expiryDate.getMinutes() + 5);
-      users.expireVerifyToken = expiryDate;
+      users.emailTokenExpiryDate = expiryDate;
     }
 
-    if (!users.expireVerifyToken) {
+    if (!users.emailTokenExpiryDate) {
       const expiryDate = new Date();
       expiryDate.setMinutes(expiryDate.getMinutes() + 2);
-      users.expireVerifyToken = expiryDate;
+      users.emailTokenExpiryDate = expiryDate;
     }
   });
 
@@ -121,7 +157,7 @@ module.exports = (sequelize, DataTypes) => {
    */
   User.prototype.toJSON = function toJSON() {
     const {
-      password, verifyToken, expireVerifyToken, ...safedata
+      password, emailVerificationToken, emailTokenExpiryDate, ...safedata
     } = this.get();
     return safedata;
   };

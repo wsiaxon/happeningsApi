@@ -406,7 +406,7 @@
                     "description": "The body of the article/story.",
                     "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. At risus viverra adipiscing at in tellus integer feugiat."
                   },
-                  "bannerImageId": {
+                  "bannerImageUrl": {
                     "type": "string",
                     "description": "The banner image of the story",
                     "example": "https://placeholder.com/350"

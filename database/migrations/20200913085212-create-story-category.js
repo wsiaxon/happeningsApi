@@ -1,30 +1,23 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Categories', {
-      id: {
-        allowNull: false,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
+    await queryInterface.sequelize.query(
+      'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"',
+    );
+
+    await queryInterface.createTable('StoryCategories', {
+      storyId: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'Stories', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      slug: {
-        type: Sequelize.STRING,
-      },
-      parentId: {
+      categoryId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Categories', // name of Target model
           key: 'id', // key in Target model that we're referencing
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      isDeleted: {
-        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
@@ -38,6 +31,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Categories');
+    await queryInterface.dropTable('StoryCategories');
   },
 };

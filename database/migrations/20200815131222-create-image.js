@@ -8,21 +8,24 @@ module.exports = {
       },
       caption: {
         type: Sequelize.STRING,
+        allowNull: true,
       },
       attribute: {
         type: Sequelize.STRING,
       },
       url: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       size: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       dimensions: {
         type: Sequelize.STRING,
       },
       isDeleted: {
-        type: Sequelize.STRING,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,

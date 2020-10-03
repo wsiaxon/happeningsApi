@@ -1,3 +1,5 @@
+const { StoryChannel, StoryStatus } = require("../../src/models/enums");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.sequelize.query(
@@ -11,9 +13,9 @@ module.exports = {
         type: Sequelize.UUID,
       },
       channel: {
-        type: Sequelize.ENUM('BLOG', 'TV', 'RADIO'),
+        type: Sequelize.ENUM(Object.values(StoryChannel)),
         allowNull: false,
-        defaultValue: 'BLOG',
+        defaultValue: StoryChannel.Blog,
       },
       type: {
         type: Sequelize.STRING,
@@ -31,16 +33,22 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       authorId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
       },
-      guestAuthor: {
-        type: Sequelize.STRING,
-      },
-      bannerImageId: {
+      // guestAuthors: {
+      //   type: Sequelize.ARRAY(Sequelize.STRING),
+      // },
+      bannerImageUrl: {
         type: Sequelize.STRING,
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM(Object.values(StoryStatus)),
+        allowNull: false,
+        defaultValue: StoryStatus.Open,
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,

@@ -5,10 +5,10 @@ const { StoryChannel, StoryStatus } = require('./enums');
 module.exports = (sequelize, DataTypes) => {
   class Story extends Model {
     static associate(models) {
-      this.belongsTo(models.User, {
+      this.belongsToMany(models.User, {
+        through: 'AuthorStory',
         foreignKey: 'authorId',
-        as: 'author',
-        onDelete: 'RESTRICT',
+        otherKey: 'storiyId',
       });
 
       this.hasMany(models.StorySection, {
@@ -17,10 +17,9 @@ module.exports = (sequelize, DataTypes) => {
 
       this.belongsToMany(models.Category, {
         as: 'categories',
-        through: 'StoryCategories',
+        through: 'StoryCategory',
         foreignKey: 'categoryId',
         otherKey: 'storyId',
-        onDelete: 'RESTRICT',
       });
     }
   }
@@ -42,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     slug: {
       type: DataTypes.STRING,
-      unique: true,
+      // unique: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -53,20 +52,21 @@ module.exports = (sequelize, DataTypes) => {
     content: {
       type: DataTypes.TEXT,
     },
-    authorId: {
-      type: DataTypes.UUID,
-    },
+    // authors: {
+    //   type: Sequelize.ARRAY(DataTypes.UUID),
+    // },
     guestAuthor: {
-      type: DataTypes.STRING,
+      type: Sequelize.ARRAY(DataTypes.STRING),
     },
-    bannerImageId: {
+    bannerImageUrl: {
       type: DataTypes.STRING,
       get() {
-        return this.getDataValue('bannerImageId') || 'https://placeholder.com/350';
+        return this.getDataValue('bannerImageUrl') || 'https://placeholder.com/350';
       },
     },
     status: {
       type: DataTypes.ENUM(Object.values(StoryStatus)),
+      allowNull: false,
       defaultValue: StoryStatus.Open,
     },
     isDeleted: {
@@ -125,20 +125,20 @@ module.exports = (sequelize, DataTypes) => {
   //   return tags;
   // };
 
-  // /**
-  //  * @function deleteTags
-  //  * @description destroys all tags for given story
-  //  *
-  //  * @param {UUID} id id of the story to which tags belong
-  //  *
-  //  * @returns {Void} returns nothing
-  //  */
-  // Story.deleteTags = async (id) => {
-  //   await Story.destroy({
-  //     returning: true,
-  //     where: { storyId: id },
-  //   });
-  // };
+  /**
+   * @function deleteTags
+   * @description destroys all tags for given story
+   *
+   * @param {UUID} id id of the story to which tags belong
+   *
+   * @returns {Void} returns nothing
+   */
+  Story.deleteTags = async (id) => {
+    await Story.destroy({
+      returning: true,
+      where: { storyId: id },
+    });
+  };
 
   return Story;
 };

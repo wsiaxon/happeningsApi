@@ -4,19 +4,26 @@ module.exports = (sequelize, DataTypes) => {
   class Category extends Model {
     static associate(models) {
       this.belongsToMany(models.Story, {
-        as: 'story',
-        through: 'StoryCategories',
+        through: 'StoryCategory',
         foreignKey: 'storyId',
         otherKey: 'categoryId'
       });
+      this.belongsTo(models.Category, {
+        foreignKey: {
+          name: 'parentId',
+          allowNull: true,
+        }
+      })
+      this.hasMany(models.Category, {
+        foreignKey: 'parentId'
+      })
     }
   }
 
   Category.init({
     id: {
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     name: {
@@ -27,8 +34,8 @@ module.exports = (sequelize, DataTypes) => {
     slug: {
       type: DataTypes.STRING,
     },
-    parent: {
-      type: DataTypes.NUMBER,
+    parentId: {
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     isDeleted: {

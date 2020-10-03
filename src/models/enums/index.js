@@ -1,3 +1,7 @@
+const Gender = {
+    Male: "MALE",
+    Female: "FEMALE"
+}
 
 const StoryChannel = {
     Blog: "BLOG",
@@ -58,4 +62,4 @@ const Permissions = {
     }
 }
 
-module.exports = { StoryChannel, StoryStatus, StorySectionType, Permissions }
+module.exports = { Gender, StoryChannel, StoryStatus, StorySectionType, Permissions }

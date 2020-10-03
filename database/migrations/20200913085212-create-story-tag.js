@@ -4,20 +4,20 @@ module.exports = {
       'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"',
     );
 
-    await queryInterface.createTable('StoryCategories', {
-      id: {
-        allowNull: false,
-        primaryKey: true,
-        type: Sequelize.UUID,
-      },
+    await queryInterface.createTable('StoryTags', {
       storyId: {
         type: Sequelize.UUID,
+        references: {
+          model: 'Stories', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
       },
       categoryId: {
-        type: Sequelize.UUID,
-      },
-      authorId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Tags', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +31,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('StoryCategories');
+    await queryInterface.dropTable('StoryTags');
   },
 };

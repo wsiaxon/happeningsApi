@@ -1,22 +1,23 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Reports', {
+    await queryInterface.createTable('Roles', {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
       },
-      userId: {
-        type: Sequelize.UUID,
-      },
-      reportType: {
+      name: {
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
-      details: {
-        type: Sequelize.TEXT,
+      permissions: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
@@ -30,6 +31,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Reports');
+    await queryInterface.dropTable('Roles');
   },
 };
