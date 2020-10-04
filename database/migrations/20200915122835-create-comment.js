@@ -38,8 +38,8 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      details: {
-        type: Sequelize.STRING,
+      contents: {
+        type: Sequelize.TEXT,
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
@@ -49,7 +49,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

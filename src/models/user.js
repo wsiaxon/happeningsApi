@@ -83,13 +83,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    lockEndDate: {
+    lockoutEndDate: {
       type: DataTypes.DATE,
       allowNull: true,
-    },
-    isEmailVerified: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
     },
     isActive: {
       type: DataTypes.BOOLEAN,

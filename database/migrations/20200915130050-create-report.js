@@ -28,7 +28,7 @@ module.exports = {
       reportType: {
         type: Sequelize.STRING,
       },
-      details: {
+      contents: {
         type: Sequelize.TEXT,
       },
       isDeleted: {
@@ -39,7 +39,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

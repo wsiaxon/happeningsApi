@@ -32,13 +32,13 @@ module.exports = {
       content: {
         type: Sequelize.TEXT,
       },
-      authorId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Users', // name of Target model
-          key: 'id', // key in Target model that we're referencing
-        },
-      },
+      // authorId: {
+      //   type: Sequelize.INTEGER,
+      //   references: {
+      //     model: 'Users', // name of Target model
+      //     key: 'id', // key in Target model that we're referencing
+      //   },
+      // },
       // guestAuthors: {
       //   type: Sequelize.ARRAY(Sequelize.STRING),
       // },
@@ -58,7 +58,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

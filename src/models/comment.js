@@ -40,8 +40,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: true,
     },
-    details: {
-      type: DataTypes.STRING,
+    contents: {
+      type: DataTypes.TEXT,
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,

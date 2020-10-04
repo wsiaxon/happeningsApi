@@ -23,9 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    content: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    contents: {
+      type: DataTypes.TEXT,
     },
     type: {
       type: DataTypes.ENUM(Object.values(StorySectionType)),

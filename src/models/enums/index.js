@@ -23,9 +23,14 @@ const StorySectionType = {
     Image: "IMAGE"
 }
 
-const Permissions = {
+const AuthorType = {
+    Author: "AUTHOR",
+    Guest: "GUEST_AUTHOR",
+}
+
+const RolePermissions = {
     User: {
-        Read: "User.Read",
+        Read: { All: "User.Read.All", One: "User.Read.One" },
         Create: "User.Create",
         Update: "User.Update",
         Delete: "User.Delete"
@@ -62,4 +67,31 @@ const Permissions = {
     }
 }
 
-module.exports = { Gender, StoryChannel, StoryStatus, StorySectionType, Permissions }
+const getPermissions = (permissionName) => {
+    return findPermissions(permissionName, RolePermissions);
+}
+
+function findPermissions(permissionName, permissionsObject){  
+    let keys = permissionName.split('.');
+    let permissions = [];
+    let permissionNameValue = permissionsObject[keys[0]];
+
+    if(permissionNameValue === undefined || !(typeof(permissionNameValue) === "string" || typeof(permissionNameValue) === "object"))
+    return [];
+    
+    if(typeof(permissionNameValue) === "string"){
+        return [permissionNameValue];
+    }
+
+    if(keys.length === 1){
+        for(let prop in permissionNameValue){
+            permissions.push(...findPermissions(prop, permissionNameValue));
+        }
+        return permissions;
+    }
+
+    let [,...others] = keys;
+    return [...findPermissions(others.join('.'), permissionNameValue)];
+}
+
+module.exports = { Gender, StoryChannel, StoryStatus, StorySectionType, AuthorType, RolePermissions, getPermissions }

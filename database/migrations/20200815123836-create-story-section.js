@@ -22,6 +22,10 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      contents: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
       type: {
         type: Sequelize.ENUM(Object.values(StorySectionType)),
         allowNull: false,
@@ -32,7 +36,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

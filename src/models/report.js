@@ -27,8 +27,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       // defaultValue: Sequelize.NOW
     },
-    details: {
-      type: DataTypes.STRING,
+    contents: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     isDeleted: {

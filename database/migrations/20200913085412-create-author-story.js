@@ -1,10 +1,12 @@
+const { AuthorType } = require("../../src/models/enums");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // await queryInterface.sequelize.query(
     //   'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"',
     // );
 
-    await queryInterface.createTable('GuestAuthorStories', {
+    await queryInterface.createTable('AuthorStories', {
       storyId: {
         type: Sequelize.UUID,
         references: {
@@ -19,18 +21,22 @@ module.exports = {
           key: 'id', // key in Target model that we're referencing
         },
       },
+      authorType: {
+        type: Sequelize.ENUM(Object.values(AuthorType)),
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('GuestAuthorStories');
+    await queryInterface.dropTable('AuthorStories');
   },
 };
