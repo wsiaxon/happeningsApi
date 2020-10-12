@@ -1,10 +1,8 @@
-const model = require('../models');
+const { Tag } = require('../models');
 const { NotFoundError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
 
-const { Tag } = model;
-
-export default {
+module.exports = {
   getAllTags: async (request, response) => {
     const { page = 1, limit = 10 } = request.query;
 

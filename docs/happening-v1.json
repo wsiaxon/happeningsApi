@@ -22,7 +22,7 @@
             "8080",
             "5000"
           ],
-          "default": "5000"
+          "default": "8080"
         }
       }
     },
@@ -748,7 +748,7 @@
         "tags": [
           "roles"
         ],
-        "summary": "Endpoint to retrieve all the rples. Returns all the roles in the database.",
+        "summary": "Endpoint to retrieve all the roles. Returns all the roles in the database.",
         "responses": {
           "200": {
             "description": "Success. Roles are successfully retrieved from the database."
@@ -859,6 +859,60 @@
         "responses": {
           "201": {
             "description": "Success. Story successfully created."
+          },
+          "400": {
+            "description": "Validation Error. One or more required fields are missing from the requestBody payload"
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
+          }
+        }
+      }
+    },
+    "/tags": {
+      
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Endpoint to retrieve all the tags. Returns all the tags in the database.",
+        "responses": {
+          "200": {
+            "description": "Success. Tags are successfully retrieved from the database."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Endpoint to create a tag",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Landscape"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success. Tag successfully created."
           },
           "400": {
             "description": "Validation Error. One or more required fields are missing from the requestBody payload"

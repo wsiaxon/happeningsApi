@@ -4,7 +4,7 @@ const paginator = require('../helpers/paginator');
 
 const { Role } = model;
 
-export default {
+module.exports = {
   getAllRoles: async (request, response) => {
     const { page = 1, limit = 10 } = request.query;
 

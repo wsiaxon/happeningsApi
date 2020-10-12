@@ -6,9 +6,7 @@ const { verifyToken, isAdmin } = require('../middleware/authentication');
 const router = Router();
 
 router.get(
-  '/categories',
-  verifyToken,
-  isAdmin,
+  '/',
   asyncWrapper(getAllCategories),
 );
 

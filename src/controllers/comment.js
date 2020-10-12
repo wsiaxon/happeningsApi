@@ -4,7 +4,7 @@ const paginator = require('../helpers/paginator');
 
 const { Comment } = model;
 
-export default {
+module.exports = {
   getAllComments: async (request, response) => {
     const { page = 1, limit = 10 } = request.query;
 
