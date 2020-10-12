@@ -55,9 +55,9 @@ module.exports = (sequelize, DataTypes) => {
     // authors: {
     //   type: Sequelize.ARRAY(DataTypes.UUID),
     // },
-    guestAuthor: {
-      type: Sequelize.ARRAY(DataTypes.STRING),
-    },
+    // guestAuthor: {
+    //   type: Sequelize.ARRAY(DataTypes.STRING),
+    // },
     bannerImageUrl: {
       type: DataTypes.STRING,
       get() {

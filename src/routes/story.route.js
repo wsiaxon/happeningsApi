@@ -1,21 +1,17 @@
 const { Router } = require('express');
 const asyncWrapper = require('../middleware/asyncWrapper');
-const authentication = require('../middleware/authentication');
-const storyController = require('../controllers/story');
-const storySchema = require('../validations/story.validators');
+const { verifyToken, isAuthor } = require('../middleware/authentication');
+const { createStory, getAllStories, getStoryBySlug, editStory } = require('../controllers/story');
+const { createStorySchema, getAllStoriesSchema, editStorySchema } = require('../validations/story.validators');
 const validator = require('../middleware/validator');
 
 const router = Router();
 
-const {
-  verifyToken, isAuthor,
-} = authentication;
-const {
-  createStory, getAllStories, getStoryBySlug, editStory,
-} = storyController;
-const {
-  createStorySchema, getAllStoriesSchema, editStorySchema,
-} = storySchema;
+router.get(
+  '/',
+  validator(getAllStoriesSchema),
+  asyncWrapper(getAllStories),
+);
 
 router.post(
   '/',
@@ -25,9 +21,8 @@ router.post(
 );
 
 router.get(
-  '/',
-  validator(getAllStoriesSchema),
-  asyncWrapper(getAllStories),
+  '/:id',
+  asyncWrapper(getStoryBySlug),
 );
 
 router.get(

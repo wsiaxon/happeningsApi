@@ -1,21 +1,14 @@
 const passport = require('passport');
 const { Router } = require('express');
 const asyncWrapper = require('../middleware/asyncWrapper');
-const authController = require('../controllers/auth');
-const authentication = require('../middleware/authentication');
-const authValidator = require('../validations/auth.validators');
+const { signup, signin, socialLogin, twitterLogin, verifyEmail,
+  resendEmailVerification, changePassword, forgotPassword, resetPassword,
+} = require('../controllers/auth');
+const { verifyToken } = require('../middleware/authentication');
+const { signupSchema, signinSchema, changePasswordSchema, emailSchema, passwordSchema } = require('../validations/auth.validators');
 const validator = require('../middleware/validator');
 
 const router = Router();
-
-const { verifyToken } = authentication;
-const {
-  signup, signin, socialLogin, twitterLogin, verifyEmail,
-  resendEmailVerification, changePassword, forgotPassword, resetPassword,
-} = authController;
-const {
-  signupSchema, signinSchema, changePasswordSchema, emailSchema, passwordSchema,
-} = authValidator;
 
 router.post(
   '/register',

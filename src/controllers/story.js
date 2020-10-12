@@ -1,12 +1,43 @@
 const { Sequelize } = require('sequelize');
 const { v4: uuid } = require('uuid');
 const { ApplicationError } = require('../helpers/error');
-const models = require('../models');
+const { User, Story, StoryCategories } = require('../models');
 const { slugify, getTagName } = require('../helpers/utils');
 
-const { User, Story, StoryCategories } = models;
-
 module.exports = {
+  
+  /**
+   * @function getAllStories
+   * @description controller for retrieving a story based on the status
+   * of the story. Default is to retrieve all stories. Status includes:
+   * - All, Open, Submitted, Approved, Published, Rejected, Scheduled
+   *
+   * @todo add pagination support for this controller
+   * @todo clarify issue with permission
+   *
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  getAllStories: async (request, response) => {
+    const { status } = request.query;
+    let stories;
+
+    if (!status) stories = await Story.findAll();
+    else stories = await Story.findAll({ where: { status: status.toUpperCase() } });
+
+    const message = stories.length
+      ? `stor${stories.length > 1 ? 'ies' : 'y'} successfully retrieved`
+      : 'no stories found in the database';
+
+    return response.status(200).json({
+      status: 'success',
+      message,
+      data: stories,
+    });
+  },
+
   /**
    * @function createStory
    * @description controller for creating a story
@@ -43,40 +74,66 @@ module.exports = {
   },
 
   /**
-   * @function getAllArticles
-   * @description controller for retrieving a story based on the status
-   * of the story. Default is to retrieve all articles. Status includes:
-   * - All, Open, Submitted, Approved, Published, Rejected, Scheduled
-   *
-   * @todo add pagination support for this controller
-   * @todo clarify issue with permission
+   * @function getStoryById
+   * @description controller for getting a story by id
    *
    * @param {Object} request
    * @param {Object} response
    *
    * @returns {Object} callback that executes the controller
    */
-  getAllStories: async (request, response) => {
-    const { status } = request.query;
-    let articles;
+  getStoryById: async (request, response) => {
+    const { id } = request.params;
+    let storyResponse = await Story.findOne({
+      where: {
+        Id: id,
+      },
+      include: [
+        {
+          model: StoryCategories,
+          as: 'categories',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt'],
+          },
+        },
+        {
+          model: User,
+          as: 'authors',
+          attributes: {
+            exclude: [
+              'password',
+              'verifyToken',
+              'expireVerifyToken',
+              'createdAt',
+              'updatedAt',
+            ],
+          },
+        },
+      ],
+    });
+    if (!storyResponse) throw new ApplicationError(404, 'story not found');
 
-    if (!status) articles = await Story.findAll();
-    else articles = await Story.findAll({ where: { status } });
+    const { dataValues } = storyResponse;
+    const tags = dataValues.category.map((eachTag) => eachTag.categoryId);
+    const tagName = await getTagName(tags);
+    const { category, author, ...newStoryResponse } = storyResponse.dataValues;
 
-    const message = articles.length
-      ? `stor${articles.length > 1 ? 'ies' : 'y'} successfully retrieved`
-      : 'no stories found in the database';
+    storyResponse = {
+      ...newStoryResponse,
+      tags: tagName,
+      author,
+    };
 
     return response.status(200).json({
       status: 'success',
-      message,
-      data: articles,
+      message: 'story successfully retrieved',
+      data: storyResponse,
     });
   },
 
   /**
-   * @function createStory
-   * @description controller for getting an article by slug
+   * @function getStoryBySlug
+   * @description controller for getting a story by slug
    *
    * @param {Object} request
    * @param {Object} response
@@ -150,19 +207,19 @@ module.exports = {
       storyId, authorId, slug, id, ...story
     } = request.body;
 
-    const storyResponse = await Story.updateArticle(request.storyInstance, story);
+    const storyResponse = await Story.updateStory(request.storyInstance, story);
     let tagName = [];
-    if (tag) {
-      await StoryCategories.deleteTags(storyResponse.id);
-      const tagResponse = await StoryCategories.createTags(
-        tag, storyResponse.id, request.user.id,
-      );
-      tagName = await getTagName(tagResponse);
-    } else {
-      const value = await StoryCategories.findTags(storyResponse.id);
-      const createdTags = value.map((eachTag) => eachTag.dataValues.categoryId);
-      tagName = await getTagName(createdTags);
-    }
+    // if (tag) {
+    //   await StoryCategories.deleteTags(storyResponse.id);
+    //   const tagResponse = await StoryCategories.createTags(
+    //     tag, storyResponse.id, request.user.id,
+    //   );
+    //   tagName = await getTagName(tagResponse);
+    // } else {
+    //   const value = await StoryCategories.findTags(storyResponse.id);
+    //   const createdTags = value.map((eachTag) => eachTag.dataValues.categoryId);
+    //   tagName = await getTagName(createdTags);
+    // }
 
     return response.status(200).json({
       status: 'success',

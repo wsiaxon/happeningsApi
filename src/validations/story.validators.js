@@ -25,15 +25,15 @@ module.exports = {
 
     check('status')
       .optional()
-      .matches(/^(draft|published)$/)
-      .withMessage('Status must be either "draft" or "published"'),
+      .matches(/^(open|submitted)$/)
+      .withMessage('Status must be either "open" or "submitted"'),
   ],
 
   getAllStoriesSchema: [
     check('status')
       .optional()
-      .isIn(['draft', 'scheduled', 'pending', 'approved', 'rejected'])
-      .withMessage("invalid 'status' value. expected: 'draft', 'scheduled', 'pending', 'approved', 'rejected'"),
+      .isIn(['open', 'submitted', 'approved', 'published', 'rejected', 'scheduled'])
+      .withMessage("invalid 'status' value. expected: 'open', 'submitted', 'approved', 'published', 'rejected', 'scheduled'"),
   ],
 
   editStorySchema: [
@@ -58,7 +58,7 @@ module.exports = {
 
     check('status')
       .optional()
-      .matches(/^(draft|published)$/)
-      .withMessage('Status must be either "draft" or "published"'),
+      .matches(/^(open|submitted)$/)
+      .withMessage('Status must be either "open" or "submitted"'),
   ],
 };
