@@ -1,6 +1,9 @@
-const { Tag } = require('../models');
-const { NotFoundError } = require('../helpers/error');
+const model = require('../models');
+const { NotFoundError, ApplicationError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
+const error = require('../helpers/error');
+
+const { Tag } = model;
 
 module.exports = {
   getAllTags: async (request, response) => {
@@ -17,16 +20,79 @@ module.exports = {
     });
   },
 
-  getOneTag: async (request, response) => {
-    const { tagId } = request.params;
+  getPagedTags: async (request, response) => {
+    const { page = 1, limit = 10 } = request.query;
 
-    const tag = await Tag.findByPk(tagId);
+    const { data, count } = await paginator(Tag, { page, limit });
 
-    if (!tag) throw new NotFoundError(`tag with id ${tagId} doesn't exist`);
+    return response.status(200).json({
+      status: 'success',
+      data: data,
+      count,
+      page: +page,
+      limit: +limit,
+    });
+  },
+  
+  getTagById: async (request, response) => {
+    const { id } = request.params;
+
+    const tag = await Tag.findByPk(id);
+
+    if (!tag) throw new NotFoundError(`tag with id ${id} doesn't exist`);
 
     return response.status(200).json({
       status: 'success',
       data: tag.toJSON(),
+    });
+  },
+  
+  /**
+   * @function createTag
+   * @description controller for creating a tag
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  createTag: async (request, response) => {
+    const tag = {
+      ...request.body,
+    };
+
+    const tagResponse = await Tag.create(tag);
+
+    return response.status(201).json({
+      status: 'success',
+      message: 'Tag successfully created',
+      data: tagResponse,
+    });
+  },
+
+  /**
+   * @function editTag
+   * @description controller for editing a tag
+   *
+   * @todo check model, middleware and controller✅
+   * @todo add more validation
+   *
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  editTag: async (request, response) => {
+    const { id, name } = request.body;
+    const { requestId } = request.params;
+    if(id !== parseInt(requestId))
+      throw new ApplicationError(400, "Id parameters do not match")
+
+    const tagResponse = await Tag.updateTag(request.body);
+
+    return response.status(200).json({
+      status: 'success',
+      message: 'story successfully updated',
+      data: tagResponse.dataValues,
     });
   },
 };

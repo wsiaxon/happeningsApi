@@ -1,6 +1,8 @@
 const { Router } = require('express');
-const { getAllComments } = require('../controllers/comment');
+const { getAllComments, getPagedComments, getCommentById, createComment } = require('../controllers/comment');
 const asyncWrapper = require('../middleware/asyncWrapper');
+const { createCommentSchema } = require('../validations/comment.validators');
+const validator = require('../middleware/validator');
 const { verifyToken, isAdmin } = require('../middleware/authentication');
 
 const router = Router();
@@ -8,8 +10,24 @@ const router = Router();
 router.get(
   '/',
   verifyToken,
-  isAdmin,
   asyncWrapper(getAllComments),
+);
+
+router.get(
+  '/paged',
+  asyncWrapper(getPagedComments),
+);
+
+router.post(
+  '/',
+  verifyToken,
+  validator(createCommentSchema),
+  asyncWrapper(createComment),
+);
+
+router.get(
+  '/:id',
+  asyncWrapper(getCommentById),
 );
 
 module.exports = router;

@@ -21,9 +21,6 @@ if (config.url) {
   );
 }
 
-console.log(getPermissions("User"))
-// console.log(getPermissions("User_Create"))
-
 fs
   .readdirSync(__dirname)
   .filter((file) => (file.indexOf('.') !== 0)

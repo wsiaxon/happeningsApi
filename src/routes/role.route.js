@@ -1,6 +1,8 @@
 const { Router } = require('express');
-const { getAllRoles } = require('../controllers/role');
+const { getAllRoles, getPagedRoles, getRoleById, createRole } = require('../controllers/role');
 const asyncWrapper = require('../middleware/asyncWrapper');
+const { createRoleSchema } = require('../validations/role.validators');
+const validator = require('../middleware/validator');
 const { verifyToken, isAdmin } = require('../middleware/authentication');
 
 const router = Router();
@@ -8,8 +10,24 @@ const router = Router();
 router.get(
   '/',
   verifyToken,
-  isAdmin,
   asyncWrapper(getAllRoles),
+);
+
+router.get(
+  '/paged',
+  asyncWrapper(getPagedRoles),
+);
+
+router.post(
+  '/',
+  verifyToken,
+  validator(createRoleSchema),
+  asyncWrapper(createRole),
+);
+
+router.get(
+  '/:id',
+  asyncWrapper(getRoleById),
 );
 
 module.exports = router;

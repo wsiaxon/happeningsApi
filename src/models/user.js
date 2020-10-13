@@ -40,10 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    phone: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+    // phone: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
     password: {
       type: DataTypes.STRING,
     },
@@ -84,7 +84,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    lockoutEndDate: {
+    lockEndDate: {
       type: DataTypes.DATE,
       allowNull: true,
     },

@@ -34,16 +34,40 @@ module.exports = {
     });
   },
 
-  getOneCategory: async (request, response) => {
-    const { categoryId } = request.params;
+  getCategoryById: async (request, response) => {
+    const { id } = request.params;
 
-    const category = await Category.findByPk(categoryId);
+    const category = await Category.findByPk(id);
 
-    if (!category) throw new NotFoundError(`category with id ${categoryId} doesn't exist`);
+    if (!category) throw new NotFoundError(`category with id ${id} doesn't exist`);
 
     return response.status(200).json({
       status: 'success',
       data: category.toJSON(),
     });
   },
+  
+  /**
+   * @function createCategory
+   * @description controller for creating a category
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  createCategory: async (request, response) => {
+    const category = {
+      ...request.body,
+    };
+    category.slug = slugify(`${request.body.name} ${(category.parentId || '')}`);
+
+    const categoryResponse = await Category.create(category);
+
+    return response.status(201).json({
+      status: 'success',
+      message: 'Category successfully created',
+      data: categoryResponse,
+    });
+  },
+
 };

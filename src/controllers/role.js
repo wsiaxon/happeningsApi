@@ -19,16 +19,53 @@ module.exports = {
     });
   },
 
-  getOneRole: async (request, response) => {
-    const { roleId } = request.params;
+  getPagedRoles: async (request, response) => {
+    const { page = 1, limit = 10 } = request.query;
 
-    const role = await Role.findByPk(roleId);
+    const { data, count } = await paginator(Role, { page, limit });
 
-    if (!role) throw new NotFoundError(`role with id ${roleId} doesn't exist`);
+    return response.status(200).json({
+      status: 'success',
+      data: data,
+      count,
+      page: +page,
+      limit: +limit,
+    });
+  },
+  
+  getRoleById: async (request, response) => {
+    const { id } = request.params;
+
+    const role = await Role.findByPk(id);
+
+    if (!role) throw new NotFoundError(`role with id ${id} doesn't exist`);
 
     return response.status(200).json({
       status: 'success',
       data: role.toJSON(),
     });
   },
+  
+  /**
+   * @function createRole
+   * @description controller for creating a role
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  createRole: async (request, response) => {
+    const role = {
+      ...request.body,
+    };
+
+    const roleResponse = await Role.create(role);
+
+    return response.status(201).json({
+      status: 'success',
+      message: 'Role successfully created',
+      data: roleResponse,
+    });
+  },
+
 };

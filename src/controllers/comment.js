@@ -19,16 +19,54 @@ module.exports = {
     });
   },
 
-  getOneComment: async (request, response) => {
-    const { commentId } = request.params;
+  getPagedComments: async (request, response) => {
+    const { page = 1, limit = 10 } = request.query;
 
-    const comment = await Comment.findByPk(commentId);
+    const { data, count } = await paginator(Comment, { page, limit });
 
-    if (!comment) throw new NotFoundError(`comment with id ${commentId} doesn't exist`);
+    return response.status(200).json({
+      status: 'success',
+      data: data,
+      count,
+      page: +page,
+      limit: +limit,
+    });
+  },
+  
+  getCommentById: async (request, response) => {
+    const { id } = request.params;
+
+    const comment = await Comment.findByPk(id);
+
+    if (!comment) throw new NotFoundError(`comment with id ${id} doesn't exist`);
 
     return response.status(200).json({
       status: 'success',
       data: comment.toJSON(),
     });
   },
+  
+  /**
+   * @function createComment
+   * @description controller for creating a comment
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  createComment: async (request, response) => {
+    const comment = {
+      ...request.body,
+    };
+    comment.slug = slugify(`${request.body.name}${(' '+comment.parentId || '')}`);
+
+    const commentResponse = await Comment.create(comment);
+
+    return response.status(201).json({
+      status: 'success',
+      message: 'Comment successfully created',
+      data: commentResponse,
+    });
+  },
+
 };
