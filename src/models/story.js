@@ -1,14 +1,17 @@
 const { Model } = require('sequelize');
 const { Sequelize } = require('sequelize');
 const { StoryChannel, StoryStatus } = require('./enums');
+// const AuthorStory = require('./authorStory');
+// const StoryCategory = require('./storyCategory');
+// const StoryTag = require('./storyTag');
 
 module.exports = (sequelize, DataTypes) => {
   class Story extends Model {
     static associate(models) {
       this.belongsToMany(models.User, {
-        through: 'AuthorStory',
+        through: models.AuthorStory,
         foreignKey: 'authorId',
-        otherKey: 'storiyId',
+        otherKey: 'storyId',
       });
 
       this.hasMany(models.StorySection, {
@@ -17,9 +20,15 @@ module.exports = (sequelize, DataTypes) => {
 
       this.belongsToMany(models.Category, {
         as: 'categories',
-        through: 'StoryCategory',
+        through: models.StoryCategory,
         foreignKey: 'categoryId',
         otherKey: 'storyId',
+      });
+      
+      this.belongsToMany(models.Tag, {
+        through: models.StoryTag,
+        foreignKey: 'storyId',
+        otherKey: 'tagId'
       });
     }
   }

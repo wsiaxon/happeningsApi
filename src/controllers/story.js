@@ -38,6 +38,20 @@ module.exports = {
     });
   },
 
+  getPagedStories: async (request, response) => {
+    const { page = 1, limit = 10 } = request.query;
+
+    const { data, count } = await paginator(Story, { page, limit });
+
+    return response.status(200).json({
+      status: 'success',
+      data: data,
+      count,
+      page: +page,
+      limit: +limit,
+    });
+  },
+
   /**
    * @function createStory
    * @description controller for creating a story

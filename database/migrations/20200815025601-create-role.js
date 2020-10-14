@@ -2,16 +2,17 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Roles', {
       id: {
-        allowNull: false,
+        // allowNull: false,
         primaryKey: true,
         type: Sequelize.INTEGER,
+        autoIncrement: true,
       },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
-      permissions: {
+      grantedPermissions: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },
       isDeleted: {

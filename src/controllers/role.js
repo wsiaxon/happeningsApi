@@ -1,6 +1,7 @@
 const model = require('../models');
 const { NotFoundError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
+const { getPermissions } = require('../models/enums');
 
 const { Role } = model;
 
@@ -55,10 +56,15 @@ module.exports = {
    * @returns {Object} callback that executes the controller
    */
   createRole: async (request, response) => {
-    const role = {
+    const { permissions, ...role } = {
       ...request.body,
     };
+    var grantedPermissions = [];
+    permissions.forEach(p => {
+      grantedPermissions.push(...getPermissions(p));
+    })
 
+    role.grantedPermissions = grantedPermissions;
     const roleResponse = await Role.create(role);
 
     return response.status(201).json({

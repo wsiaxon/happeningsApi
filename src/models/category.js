@@ -1,12 +1,19 @@
 const { Model } = require('sequelize');
+// const StoryCategory = require('./storyCategory');
+// const StoryTag = require('./storyTag');
 
 module.exports = (sequelize, DataTypes) => {
   class Category extends Model {
     static associate(models) {
       this.belongsToMany(models.Story, {
-        through: 'StoryCategory',
-        foreignKey: 'storyId',
-        otherKey: 'categoryId'
+        through: models.StoryCategory,
+        otherKey: 'categoryId',
+        foreignKey: 'storyId'
+      });
+      this.belongsToMany(models.Tag, {
+        through: models.StoryTag,
+        foreignKey: 'categoryId',
+        otherKey: 'tagId'
       });
       this.belongsTo(models.Category, {
         foreignKey: {
@@ -24,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
     },
     name: {

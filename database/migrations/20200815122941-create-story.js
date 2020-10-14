@@ -8,7 +8,7 @@ module.exports = {
 
     await queryInterface.createTable('Stories', {
       id: {
-        allowNull: false,
+        // allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
       },

@@ -1,10 +1,10 @@
 const { Model } = require('sequelize');
-// const UserRole = require('./userrole');
+// const UserRole = require('./userRole');
 
 module.exports = (sequelize, DataTypes) => {
   class Role extends Model {
     static associate(models) {
-      this.belongsToMany(models.User, { through: 'UserRole', foreignKey: 'roleId', otherKey: 'userId' });
+      this.belongsToMany(models.User, { through: models.UserRole, as: 'UserRoles', foreignKey: 'roleId', otherKey: 'userId' });
     }
   }
 
@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
     },
     name: {
@@ -19,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    permissions: {
+    grantedPermissions: {
       type: DataTypes.ARRAY(DataTypes.STRING),
     },
     isDeleted: {

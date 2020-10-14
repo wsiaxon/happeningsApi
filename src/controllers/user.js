@@ -1,14 +1,14 @@
-const model = require('../models');
+const models = require('../models');
 const { NotFoundError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
 
-const { User } = model;
+const { User, Role } = models;
 
 module.exports = {
   getAllUsers: async (request, response) => {
     const { page = 1, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(User, { page, limit });
+    const { data, count } = await paginator(User, { page, limit, include: [{ model: Role, attributes: [] }] });
 
     return response.status(200).json({
       status: 'success',

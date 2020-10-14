@@ -31,6 +31,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('StoryCategories');
+    await queryInterface.dropTable('UserRoles');
   },
 };

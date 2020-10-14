@@ -31,17 +31,13 @@ const paginator = async (Source, options) => {
     return { data: result, count };
   }
 
-  const { count } = await Source.findAndCountAll({ ...otherOptions });
-  if (count) {
-    data = await Source.findAll({
-      ...otherOptions,
-      limit,
-      offset,
-      order: [['createdAt', 'DESC']],
-    });
-  }
+  const result = await Source.findAndCountAll({ ...otherOptions,
+    limit,
+    offset,
+    order: [['createdAt', 'DESC']] });
+    console.log(result.rows[0].dataValues);
 
-  return { data, count };
+  return { data: result.rows.map(x => x.dataValues), count: result.count };
 };
 
 module.exports = paginator;

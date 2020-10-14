@@ -5,7 +5,7 @@ module.exports = {
     {
       id: 1,
       name: 'Admin',
-      permissions: [
+      grantedPermissions: [
         ...getPermissions("User"),
         ...getPermissions("Role"),
         ...getPermissions("Category"),

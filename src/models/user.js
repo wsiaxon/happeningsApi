@@ -4,21 +4,22 @@ const jwt = require('jsonwebtoken');
 const { Model } = require('sequelize');
 const { urlSafeRandomString } = require('../helpers/auth');
 const { Gender } = require('./enums');
-// const UserRole = require('./userrole');
+// const UserRole = require('./userRole');
+// const AuthorStory = require('./authorStory');
 
 config();
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      this.belongsToMany(models.User, {
+      this.belongsToMany(models.Story, {
         as: 'AuthorStories',
-        through: 'AuthorStory',
+        through: models.AuthorStory,
         foreignKey: 'storyId',
         otherKey: 'authorId',
       });
       
-      this.belongsToMany(models.Role, { through: 'UserRole', foreignKey: 'userId', otherKey: 'roleId' });
+      this.belongsToMany(models.Role, { through: models.UserRole, foreignKey: 'userId', otherKey: 'roleId' });
     }
   }
 
@@ -33,12 +34,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    bio: {
+    username: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    bio: {
+      type: DataTypes.STRING,
     },
     // phone: {
     //   type: DataTypes.STRING,
@@ -72,10 +77,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     isLockedOut: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
@@ -90,7 +91,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     isActive: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      defaultValue: true
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
