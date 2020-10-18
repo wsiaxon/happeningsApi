@@ -15,7 +15,7 @@ router.get(
 );
 
 router.get(
-  '/paged',
+  '/getAll',
   verifyToken,
   isAdmin,
   asyncWrapper(getPagedUsers),

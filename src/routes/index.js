@@ -9,12 +9,12 @@ const storyRoute = require('./story.route');
 
 const router = Router();
 
-router.use('/roles', roleRoute);
-router.use('/users', userRoute);
-router.use('/categories', categoryRoute);
-router.use('/comments', commentRoute);
-router.use('/tags', tagRoute);
+router.use('/role', roleRoute);
+router.use('/user', userRoute);
+router.use('/category', categoryRoute);
+router.use('/comment', commentRoute);
+router.use('/tag', tagRoute);
 router.use('/auth', authRoute);
-router.use('/stories', storyRoute);
+router.use('/story', storyRoute);
 
 module.exports = router;

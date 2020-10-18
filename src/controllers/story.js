@@ -3,6 +3,7 @@ const { v4: uuid } = require('uuid');
 const { ApplicationError } = require('../helpers/error');
 const { User, Story, StoryCategories } = require('../models');
 const { slugify, getTagName } = require('../helpers/utils');
+const paginator = require('../helpers/paginator');
 
 module.exports = {
   
@@ -34,7 +35,7 @@ module.exports = {
     return response.status(200).json({
       status: 'success',
       message,
-      data: stories,
+      result: stories,
     });
   },
 

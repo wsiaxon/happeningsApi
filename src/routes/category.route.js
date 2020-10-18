@@ -13,7 +13,7 @@ router.get(
 );
 
 router.get(
-  '/paged',
+  '/getAll',
   asyncWrapper(getPagedCategories),
 );
 

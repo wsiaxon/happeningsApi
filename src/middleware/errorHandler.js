@@ -32,6 +32,7 @@ export default (err, request, response, next) => {
   }
 
   return response.status(err.statusCode || 500).json({
+    result: undefined,
     status: 'error',
     error: {
       message: err.message,

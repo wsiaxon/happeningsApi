@@ -14,7 +14,7 @@ router.get(
 );
 
 router.get(
-  '/paged',
+  '/getAll',
   // validator(getAllStoriesSchema),
   asyncWrapper(getPagedStories),
 );
