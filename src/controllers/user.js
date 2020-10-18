@@ -6,9 +6,9 @@ const { User, Role, Story } = models;
 
 module.exports = {
   getAllUsers: async (request, response) => {
-    const { page = 1, limit = 10 } = request.query;
+    const { skip = 1, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(User, { page, limit, include: [{ model: Role, attributes: [] }] });
+    const { data, count } = await paginator(User, { skip, limit, include: [{ model: Role, attributes: [] }] });
 
     return response.status(200).json({
       status: 'success',
@@ -17,15 +17,15 @@ module.exports = {
         return dataValues;
       }),
       count,
-      page: +page,
+      skip: +skip,
       limit: +limit,
     });
   },
 
   getPagedUsers: async (request, response) => {
-    const { page = 1, limit = 10 } = request.query;
+    const { skip = 1, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(User, { page, limit, include: [{ model: Role, attributes: [] }] });
+    const { data, count } = await paginator(User, { skip, limit, include: [{ model: Role, attributes: [] }] });
 
     return response.status(200).json({
       status: 'success',
@@ -34,7 +34,7 @@ module.exports = {
         return dataValues;
       }),
       count,
-      page: +page,
+      skip: +skip,
       limit: +limit,
     });
   },

@@ -23,7 +23,7 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-app.use(routes);
+app.use('/api', routes);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.get('/', (_, response) => {

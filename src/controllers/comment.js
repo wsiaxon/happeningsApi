@@ -6,29 +6,29 @@ const { Comment } = model;
 
 module.exports = {
   getAllComments: async (request, response) => {
-    const { page = 1, limit = 10 } = request.query;
+    const { skip = 1, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(Comment, { page, limit });
+    const { data, count } = await paginator(Comment, { skip, limit });
 
     return response.status(200).json({
       status: 'success',
       data: data,
       count,
-      page: +page,
+      skip: +skip,
       limit: +limit,
     });
   },
 
   getPagedComments: async (request, response) => {
-    const { page = 1, limit = 10 } = request.query;
+    const { skip = 1, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(Comment, { page, limit });
+    const { data, count } = await paginator(Comment, { skip, limit });
 
     return response.status(200).json({
       status: 'success',
       data: data,
       count,
-      page: +page,
+      skip: +skip,
       limit: +limit,
     });
   },

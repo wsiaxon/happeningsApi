@@ -11,13 +11,13 @@
 const paginator = async (Source, options) => {
   let data = [];
   const {
-    page,
+    skip,
     limit,
     dataSource,
     dataToSource,
     ...otherOptions
   } = options;
-  const offset = limit * (+page - 1);
+  const offset = limit * +skip;
 
   if (!Source) {
     const { data: result, count } = await dataSource({

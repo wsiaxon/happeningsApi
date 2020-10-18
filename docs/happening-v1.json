@@ -375,10 +375,10 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page",
+            "name": "skip",
             "schema": {
               "type": "integer",
-              "default": 1
+              "default": 0
             }
           },
           {
@@ -872,10 +872,10 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page",
+            "name": "skip",
             "schema": {
               "type": "integer",
-              "default": 1
+              "default": 0
             }
           },
           {
