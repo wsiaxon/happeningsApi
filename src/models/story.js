@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsToMany(models.User, {
         through: models.AuthorStory,
-        foreignKey: 'authorId',
-        otherKey: 'storyId',
+        foreignKey: 'storyId',
+        otherKey: 'userId',
       });
 
       this.hasMany(models.StorySection, {
@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.Category, {
         as: 'categories',
         through: models.StoryCategory,
-        foreignKey: 'categoryId',
-        otherKey: 'storyId',
+        foreignKey: 'storyId',
+        otherKey: 'categoryId',
       });
       
       this.belongsToMany(models.Tag, {
@@ -133,6 +133,11 @@ module.exports = (sequelize, DataTypes) => {
   //   const tags = await Story.findAll({ where: { storyId } });
   //   return tags;
   // };
+
+  Story.checkTagsExistence = async (tag) => {
+    const availableCategory = await Category.findAll({ where: { id: tag } });
+    return availableCategory;
+  };
 
   /**
    * @function deleteTags

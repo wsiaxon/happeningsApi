@@ -75,10 +75,10 @@ module.exports = {
     story.slug = slugify(`${request.body.title} ${story.id}`);
 
     const storyResponse = await Story.create(story);
-    const tagResponse = tag
-      ? await StoryCategories.createTags(tag, storyResponse.id, request.user.id)
-      : [];
-    const tagName = await getTagName(tagResponse);
+    // const tagResponse = tag
+    //   ? await Story.createTags(tag, storyResponse.id, request.user.id)
+    //   : [];
+    // const tagName = await getTagName(tagResponse);
 
     return response.status(201).json({
       status: 'success',

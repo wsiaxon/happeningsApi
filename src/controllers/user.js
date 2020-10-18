@@ -2,7 +2,7 @@ const models = require('../models');
 const { NotFoundError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
 
-const { User, Role } = models;
+const { User, Role, Story } = models;
 
 module.exports = {
   getAllUsers: async (request, response) => {
@@ -12,7 +12,7 @@ module.exports = {
 
     return response.status(200).json({
       status: 'success',
-      data: JSON.parse(JSON.stringify(data)).map((item) => {
+      data: data.map((item) => {
         const { password, ...dataValues } = item;
         return dataValues;
       }),
@@ -25,11 +25,14 @@ module.exports = {
   getPagedUsers: async (request, response) => {
     const { page = 1, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(User, { page, limit });
+    const { data, count } = await paginator(User, { page, limit, include: [{ model: Role, attributes: [] }] });
 
     return response.status(200).json({
       status: 'success',
-      data: data,
+      data: data.map((item) => {
+        const { password, ...dataValues } = item;
+        return dataValues;
+      }),
       count,
       page: +page,
       limit: +limit,
@@ -39,13 +42,13 @@ module.exports = {
   getUserById: async (request, response) => {
     const { id } = request.params;
 
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, { include: [{ model: Role, attributes: [] },{ model: Story, attributes: [] }] });
 
     if (!user) throw new NotFoundError(`user with id ${id} doesn't exist`);
 
     return response.status(200).json({
       status: 'success',
-      data: user.toJSON(),
+      data: user,
     });
   },
   

@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.Story, {
         as: 'StoryTags',
         through: models.StoryTag,
-        foreignKey: 'storyId',
-        otherKey: 'tagId',
+        foreignKey: 'tagId',
+        otherKey: 'storyId',
       });
     }
   }

@@ -16,7 +16,7 @@ module.exports = {
       .exists()
       .withMessage('story content is required')
       .isLength({ min: 50, max: 1024 })
-      .withMessage('story body should be between 50 to 1024 characters'),
+      .withMessage('story content should be between 50 to 1024 characters'),
 
     check('tag')
       .optional()
@@ -49,7 +49,7 @@ module.exports = {
       .optional()
       .trim()
       .isLength({ min: 50, max: 1024 })
-      .withMessage('story body should be between 50 to 1024 characters'),
+      .withMessage('story content should be between 50 to 1024 characters'),
 
     check('tag')
       .optional()

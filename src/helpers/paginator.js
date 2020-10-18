@@ -35,7 +35,6 @@ const paginator = async (Source, options) => {
     limit,
     offset,
     order: [['createdAt', 'DESC']] });
-    console.log(result.rows[0].dataValues);
 
   return { data: result.rows.map(x => x.dataValues), count: result.count };
 };
