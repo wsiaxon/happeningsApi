@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getAllComments, getPagedComments, getCommentById, createComment } = require('../controllers/comment');
+const { getAllComments, getCommentById, createComment } = require('../controllers/comment');
 const asyncWrapper = require('../middleware/asyncWrapper');
 const { createCommentSchema } = require('../validations/comment.validators');
 const validator = require('../middleware/validator');
@@ -15,7 +15,7 @@ router.get(
 
 router.get(
   '/getAll',
-  asyncWrapper(getPagedComments),
+  asyncWrapper(getAllComments),
 );
 
 router.post(

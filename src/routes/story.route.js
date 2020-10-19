@@ -1,26 +1,26 @@
 const { Router } = require('express');
 const asyncWrapper = require('../middleware/asyncWrapper');
 const { verifyToken, isAuthor } = require('../middleware/authentication');
-const { createStory, getAllStories, editStory, getStoryById, getPagedStories } = require('../controllers/story');
+const { createStory, getAllStories, editStory, getStoryById, getStatusCounts } = require('../controllers/story');
 const { createStorySchema, getAllStoriesSchema, editStorySchema } = require('../validations/story.validators');
 const validator = require('../middleware/validator');
 
 const router = Router();
 
 router.get(
-  '/',
-  validator(getAllStoriesSchema),
-  asyncWrapper(getAllStories),
+  '/getStatusCounts',
+  // validator(getAllStoriesSchema),
+  asyncWrapper(getStatusCounts),
 );
 
 router.get(
   '/getAll',
   // validator(getAllStoriesSchema),
-  asyncWrapper(getPagedStories),
+  asyncWrapper(getAllStories),
 );
 
 router.post(
-  '/',
+  '/create',
   verifyToken,
   validator(createStorySchema),
   asyncWrapper(createStory),

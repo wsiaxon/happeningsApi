@@ -11,7 +11,7 @@ const StoryChannel = {
 
 const StoryStatus = {
     Open: "OPEN",
-    Submitted: "Submitted",
+    Submitted: "SUBMITTED",
     Approved: "APPROVED",
     Published: "PUBLISHED",
     Rejected: "REJECTED",

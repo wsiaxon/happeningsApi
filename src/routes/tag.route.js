@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getAllTags, getPagedTags, getTagById, createTag } = require('../controllers/tag');
+const { getAllTags, getTagById, createTag } = require('../controllers/tag');
 const asyncWrapper = require('../middleware/asyncWrapper');
 const { createTagSchema, editTagSchema } = require('../validations/tag.validators');
 const validator = require('../middleware/validator');
@@ -8,14 +8,8 @@ const { verifyToken, isAdmin } = require('../middleware/authentication');
 const router = Router();
 
 router.get(
-  '/',
-  verifyToken,
-  asyncWrapper(getAllTags),
-);
-
-router.get(
   '/getAll',
-  asyncWrapper(getPagedTags),
+  asyncWrapper(getAllTags),
 );
 
 router.post(

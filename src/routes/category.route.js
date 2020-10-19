@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getAllCategories, getCategoryById, getPagedCategories, createCategory } = require('../controllers/category');
+const { getAllCategories, getCategoryById, createCategory } = require('../controllers/category');
 const { createCategorySchema } = require('../validations/category.validators');
 const validator = require('../middleware/validator');
 const asyncWrapper = require('../middleware/asyncWrapper');
@@ -8,13 +8,8 @@ const { verifyToken, isAdmin } = require('../middleware/authentication');
 const router = Router();
 
 router.get(
-  '/',
-  asyncWrapper(getAllCategories),
-);
-
-router.get(
   '/getAll',
-  asyncWrapper(getPagedCategories),
+  asyncWrapper(getAllCategories),
 );
 
 router.post(

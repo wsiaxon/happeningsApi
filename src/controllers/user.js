@@ -12,7 +12,7 @@ module.exports = {
 
     return response.status(200).json({
       status: 'success',
-      data: data.map((item) => {
+      result: data.map((item) => {
         const { password, ...dataValues } = item;
         return dataValues;
       }),
@@ -23,19 +23,18 @@ module.exports = {
   },
 
   getPagedUsers: async (request, response) => {
-    const { skip = 1, limit = 10 } = request.query;
+    const { skip = 0, limit = 10 } = request.query;
 
     const { data, count } = await paginator(User, { skip, limit, include: [{ model: Role, attributes: [] }] });
 
     return response.status(200).json({
       status: 'success',
-      data: data.map((item) => {
-        const { password, ...dataValues } = item;
-        return dataValues;
-      }),
-      count,
-      skip: +skip,
-      limit: +limit,
+      result: {
+        items: data,
+        totalCount: count,
+        skip: +skip,
+        limit: +limit,
+      }
     });
   },
   
@@ -48,7 +47,7 @@ module.exports = {
 
     return response.status(200).json({
       status: 'success',
-      data: user,
+      result: user,
     });
   },
   
@@ -70,7 +69,7 @@ module.exports = {
     return response.status(201).json({
       status: 'success',
       message: 'User successfully created',
-      data: userResponse,
+      result: userResponse,
     });
   },
 

@@ -1,9 +1,10 @@
 const { Sequelize } = require('sequelize');
 const { v4: uuid } = require('uuid');
 const { ApplicationError } = require('../helpers/error');
-const { User, Story, StoryCategories } = require('../models');
+const { User, Story, StoryCategories, Category } = require('../models');
 const { slugify, getTagName } = require('../helpers/utils');
 const paginator = require('../helpers/paginator');
+const { StoryStatus } = require('../models/enums');
 
 module.exports = {
   
@@ -22,34 +23,64 @@ module.exports = {
    * @returns {Object} callback that executes the controller
    */
   getAllStories: async (request, response) => {
-    const { status } = request.query;
-    let stories;
+    const { status, skip = 0, limit = 10 } = request.query;
+    let isStatus = false;
+    if(!!status){
+      for(let stat in StoryStatus){
+        if(status.toUpperCase() === StoryStatus[stat]){
+          isStatus = true;
+          break;
+        }
+      }
+    }
+    // if(!isStatus) throw new ApplicationError(400, "Invalid Status");
 
-    if (!status) stories = await Story.findAll();
-    else stories = await Story.findAll({ where: { status: status.toUpperCase() } });
+    let result;
 
-    const message = stories.length
-      ? `stor${stories.length > 1 ? 'ies' : 'y'} successfully retrieved`
+    if (!isStatus) {
+      result = await paginator(Story, { skip, limit, include: [{ model: Category }] });
+    }
+    else {
+      result = await paginator(Story, { skip, limit, where: { status: status.toUpperCase() }, include: [{ model: Category, attributes: [] }] });
+    }
+
+    const message = result.data.length
+      ? `stor${result.data.length > 1 ? 'ies' : 'y'} successfully retrieved`
       : 'no stories found in the database';
 
     return response.status(200).json({
       status: 'success',
-      message,
-      result: stories,
+      result: {
+        items: result.data,
+        totalCount: result.count,
+        skip: +skip,
+        limit: +limit,
+      }
     });
   },
 
-  getPagedStories: async (request, response) => {
-    const { skip = 1, limit = 10 } = request.query;
+  getStstusCounts: async (request, response) => {
+    // const { skip = 1, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(Story, { skip, limit });
+    const all = await Story.count();
+    const open = await Story.count({ where: { status: 'OPEN'}});
+    const submitted = await Story.count({ where: { status: 'SUBMITTED'}});
+    const approved = await Story.count({ where: { status: 'APPROVED'}});
+    const published = await Story.count({ where: { status: 'PUBLISHED'}});
+    const rejected = await Story.count({ where: { status: 'REJECTED'}});
+    const scheduled = await Story.count({ where: { status: 'SCHEDULED'}});
 
     return response.status(200).json({
       status: 'success',
-      data: data,
-      count,
-      skip: +skip,
-      limit: +limit,
+      result: {
+        all,
+        open,
+        submitted,
+        approved,
+        published,
+        rejected,
+        scheduled
+      }
     });
   },
 
@@ -67,7 +98,7 @@ module.exports = {
    * @returns {Object} callback that executes the controller
    */
   createStory: async (request, response) => {
-    const { tag } = request.body;
+    const { categories } = request.body;
     const story = {
       ...request.body,
       id: uuid(),
@@ -76,15 +107,15 @@ module.exports = {
     story.slug = slugify(`${request.body.title} ${story.id}`);
 
     const storyResponse = await Story.create(story);
-    // const tagResponse = tag
-    //   ? await Story.createTags(tag, storyResponse.id, request.user.id)
-    //   : [];
+    const categoryResponse = categories
+      ? await storyResponse.addCategory(categories)
+      : [];
     // const tagName = await getTagName(tagResponse);
 
     return response.status(201).json({
       status: 'success',
       message: 'story successfully created',
-      data: { storyResponse, tags: tagName },
+      result: storyResponse
     });
   },
 
@@ -142,7 +173,7 @@ module.exports = {
     return response.status(200).json({
       status: 'success',
       message: 'story successfully retrieved',
-      data: storyResponse,
+      result: storyResponse,
     });
   },
 
@@ -200,7 +231,7 @@ module.exports = {
     return response.status(200).json({
       status: 'success',
       message: 'story successfully retrieved',
-      data: storyResponse,
+      result: storyResponse,
     });
   },
 
@@ -239,7 +270,7 @@ module.exports = {
     return response.status(200).json({
       status: 'success',
       message: 'story successfully updated',
-      data: { ...storyResponse.dataValues, tags: tagName },
+      result: { ...storyResponse.dataValues, tags: tagName },
     });
   },
 };

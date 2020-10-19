@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       this.belongsToMany(models.Category, {
-        as: 'categories',
+        // as: 'categories',
         through: models.StoryCategory,
         foreignKey: 'storyId',
         otherKey: 'categoryId',
@@ -99,27 +99,27 @@ module.exports = (sequelize, DataTypes) => {
     return story;
   };
 
-  // /**
-  //  * @function createTags
-  //  * @description creates tags for a given story
-  //  *
-  //  * @param {Object} tag tags to be created
-  //  * @param {UUID} id id of the story to which tags belong
-  //  * @param {UUID} authorId id of the author
-  //  *
-  //  * @returns {Array} array of tags
-  //  */
-  // Story.createTags = async (tag, id, authorId) => {
-  //   const tags = tag.map((eachTag) => ({
-  //     storyId: id,
-  //     categoryId: eachTag,
-  //     authorId,
-  //   }));
-  //   const response = await Story.bulkCreate(tags);
-  //   const tagsCreated = response.map((eachTag) => eachTag.dataValues.categoryId);
+  /**
+   * @function createTags
+   * @description creates tags for a given story
+   *
+   * @param {Object} tag tags to be created
+   * @param {UUID} id id of the story to which tags belong
+   * @param {UUID} authorId id of the author
+   *
+   * @returns {Array} array of tags
+   */
+  Story.createTags = async (tag, id, authorId) => {
+    const tags = tag.map((eachTag) => ({
+      storyId: id,
+      categoryId: eachTag,
+      authorId,
+    }));
+    const response = await Story.bulkCreate(tags);
+    const tagsCreated = response.map((eachTag) => eachTag.dataValues.categoryId);
 
-  //   return tagsCreated;
-  // };
+    return tagsCreated;
+  };
 
   // /**
   //  * @function findTags

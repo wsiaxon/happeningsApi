@@ -7,10 +7,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         autoIncrement: true,
       },
-      name: {
+      title: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
+      },
+      summary: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       slug: {
         type: Sequelize.STRING,

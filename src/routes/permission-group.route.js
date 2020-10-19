@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getAllPermissionGroups, getPagedPermissionGroups, getPermissionGroupById, createPermissionGroup } = require('../controllers/permission-group');
+const { getAllPermissionGroups, getPermissionGroupById, createPermissionGroup } = require('../controllers/permission-group');
 const asyncWrapper = require('../middleware/asyncWrapper');
 const { createPermissionGroupSchema } = require('../validations/permissionGroup.validators');
 const validator = require('../middleware/validator');

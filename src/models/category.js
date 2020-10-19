@@ -34,10 +34,14 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false,
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
+    },
+    summary: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     slug: {
       type: DataTypes.STRING,

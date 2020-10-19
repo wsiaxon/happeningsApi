@@ -6,31 +6,17 @@ const { Category } = model;
 
 module.exports = {
   getAllCategories: async (request, response) => {
-
-    const categories = await Category.findAll();
-
-    const message = categories.length
-      ? `categor${categories.length > 1 ? 'ies' : 'y'} successfully retrieved`
-      : 'no categories found in the database';
-
-    return response.status(200).json({
-      status: 'success',
-      message,
-      data: categories
-    });
-  },
-
-  getPagedCategories: async (request, response) => {
-    const { skip = 1, limit = 10 } = request.query;
-
+    const { skip = 0, limit = 10 } = request.query;
     const { data, count } = await paginator(Category, { skip, limit });
 
     return response.status(200).json({
       status: 'success',
-      data: data,
-      count,
-      skip: +skip,
-      limit: +limit,
+      result: {
+        items: data,
+        totalCount: count,
+        skip: +skip,
+        limit: +limit,
+      }
     });
   },
 
@@ -43,7 +29,7 @@ module.exports = {
 
     return response.status(200).json({
       status: 'success',
-      data: category.toJSON(),
+      result: category.toJSON(),
     });
   },
   
@@ -66,7 +52,7 @@ module.exports = {
     return response.status(201).json({
       status: 'success',
       message: 'Category successfully created',
-      data: categoryResponse,
+      result: categoryResponse,
     });
   },
 

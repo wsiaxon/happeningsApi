@@ -11,7 +11,7 @@ const router = Router();
 
 router.use('/role', roleRoute);
 router.use('/user', userRoute);
-router.use('/category', categoryRoute);
+router.use('/collection', categoryRoute);
 router.use('/comment', commentRoute);
 router.use('/tag', tagRoute);
 router.use('/auth', authRoute);

@@ -6,16 +6,18 @@ const { Comment } = model;
 
 module.exports = {
   getAllComments: async (request, response) => {
-    const { skip = 1, limit = 10 } = request.query;
+    const { skip = 0, limit = 10 } = request.query;
 
     const { data, count } = await paginator(Comment, { skip, limit });
 
     return response.status(200).json({
       status: 'success',
-      data: data,
-      count,
-      skip: +skip,
-      limit: +limit,
+      result: {
+        items: data,
+        totalCount: count,
+        skip: +skip,
+        limit: +limit,
+      }
     });
   },
 
@@ -26,7 +28,7 @@ module.exports = {
 
     return response.status(200).json({
       status: 'success',
-      data: data,
+      result: data,
       count,
       skip: +skip,
       limit: +limit,
@@ -42,7 +44,7 @@ module.exports = {
 
     return response.status(200).json({
       status: 'success',
-      data: comment.toJSON(),
+      result: comment.toJSON(),
     });
   },
   
@@ -65,7 +67,7 @@ module.exports = {
     return response.status(201).json({
       status: 'success',
       message: 'Comment successfully created',
-      data: commentResponse,
+      result: commentResponse,
     });
   },
 
