@@ -1,41 +1,37 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Comments', {
+    await queryInterface.createTable('Roles', {
       id: {
-        allowNull: false,
+        // allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
-      },
-      userId: {
-        type: Sequelize.UUID,
-      },
-      parentId: {
-        type: Sequelize.STRING,
-      },
-      storyId: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
       },
       name: {
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
-      details: {
-        type: Sequelize.STRING,
+      grantedPermissions: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Comments');
+    await queryInterface.dropTable('Roles');
   },
 };

@@ -1,3 +1,5 @@
+const { StoryChannel, StoryStatus } = require("../../src/models/enums");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.sequelize.query(
@@ -6,14 +8,14 @@ module.exports = {
 
     await queryInterface.createTable('Stories', {
       id: {
-        allowNull: false,
+        // allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
       },
       channel: {
-        type: Sequelize.ENUM('BLOG', 'TV', 'RADIO'),
+        type: Sequelize.ENUM(Object.values(StoryChannel)),
         allowNull: false,
-        defaultValue: 'BLOG',
+        defaultValue: StoryChannel.Blog,
       },
       type: {
         type: Sequelize.STRING,
@@ -30,17 +32,23 @@ module.exports = {
       content: {
         type: Sequelize.TEXT,
       },
-      authorId: {
-        type: Sequelize.UUID,
-      },
-      guestAuthor: {
-        type: Sequelize.STRING,
-      },
-      bannerImageId: {
+      // authorId: {
+      //   type: Sequelize.INTEGER,
+      //   references: {
+      //     model: 'Users', // name of Target model
+      //     key: 'id', // key in Target model that we're referencing
+      //   },
+      // },
+      // guestAuthors: {
+      //   type: Sequelize.ARRAY(Sequelize.STRING),
+      // },
+      bannerImageUrl: {
         type: Sequelize.STRING,
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM(Object.values(StoryStatus)),
+        allowNull: false,
+        defaultValue: StoryStatus.Open,
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
@@ -50,7 +58,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

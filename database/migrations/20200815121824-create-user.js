@@ -1,19 +1,29 @@
+const { Gender } = require("../../src/models/enums");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Users', {
+    // let transaction = await queryInterface.sequelize.transaction();
+    await queryInterface.createTable('Users',{
       id: {
-        allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        // allowNull: false,
       },
-      firstName: {
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      bio: {
         type: Sequelize.STRING,
       },
-      lastName: {
-        type: Sequelize.STRING,
+      gender: {
+        type: Sequelize.ENUM(Object.values(Gender)),
+        allowNull: true,
       },
       email: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       password: {
         type: Sequelize.STRING,
@@ -24,21 +34,50 @@ module.exports = {
       isAdmin: {
         type: Sequelize.BOOLEAN,
       },
-      verifyToken: {
+      emailVerificationToken: {
         type: Sequelize.STRING,
       },
-      expireVerifyToken: {
+      emailTokenExpiryDate: {
         type: Sequelize.DATE,
       },
-      isVerified: {
+      isEmailVerified: {
         type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      isLockedOut: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      failedCount: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      lockEndDate: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      isEmailVerified: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
+      isActive: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
+      isDeleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

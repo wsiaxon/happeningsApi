@@ -1,27 +1,34 @@
 const { Model } = require('sequelize');
 const { Sequelize } = require('sequelize');
+const { StoryChannel, StoryStatus } = require('./enums');
+// const AuthorStory = require('./authorStory');
+// const StoryCategory = require('./storyCategory');
+// const StoryTag = require('./storyTag');
 
 module.exports = (sequelize, DataTypes) => {
   class Story extends Model {
     static associate(models) {
-      this.belongsTo(models.User, {
-        foreignKey: 'authorId',
-        as: 'author',
-        onDelete: 'CASCADE',
+      this.belongsToMany(models.User, {
+        through: models.AuthorStory,
+        foreignKey: 'storyId',
+        otherKey: 'userId',
       });
 
-      this.hasMany(models.StoryCategories, {
+      this.hasMany(models.StorySection, {
         foreignKey: 'storyId',
-        as: 'category',
-        onDelete: 'CASCADE',
       });
 
       this.belongsToMany(models.Category, {
-        as: 'categories',
-        through: 'StoryCategories',
+        // as: 'categories',
+        through: models.StoryCategory,
         foreignKey: 'storyId',
         otherKey: 'categoryId',
-        onDelete: 'CASCADE',
+      });
+      
+      this.belongsToMany(models.Tag, {
+        through: models.StoryTag,
+        foreignKey: 'storyId',
+        otherKey: 'tagId'
       });
     }
   }
@@ -34,16 +41,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     channel: {
-      type: DataTypes.ENUM('BLOG', 'TV', 'RADIO'),
+      type: DataTypes.ENUM(Object.values(StoryChannel)),
       allowNull: false,
-      defaultValue: 'BLOG',
+      defaultValue: StoryChannel.Blog,
     },
     type: {
       type: DataTypes.STRING,
     },
     slug: {
       type: DataTypes.STRING,
-      unique: true,
+      // unique: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -54,21 +61,22 @@ module.exports = (sequelize, DataTypes) => {
     content: {
       type: DataTypes.TEXT,
     },
-    authorId: {
-      type: DataTypes.STRING,
-    },
-    guestAuthor: {
-      type: DataTypes.STRING,
-    },
-    bannerImageId: {
+    // authors: {
+    //   type: Sequelize.ARRAY(DataTypes.UUID),
+    // },
+    // guestAuthor: {
+    //   type: Sequelize.ARRAY(DataTypes.STRING),
+    // },
+    bannerImageUrl: {
       type: DataTypes.STRING,
       get() {
-        return this.getDataValue('bannerImageId') || 'https://placeholder.com/350';
+        return this.getDataValue('bannerImageUrl') || 'https://placeholder.com/350';
       },
     },
     status: {
-      type: DataTypes.ENUM('draft', 'scheduled', 'pending', 'approved', 'rejected'),
-      defaultValue: 'draft',
+      type: DataTypes.ENUM(Object.values(StoryStatus)),
+      allowNull: false,
+      defaultValue: StoryStatus.Open,
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
@@ -86,9 +94,64 @@ module.exports = (sequelize, DataTypes) => {
     return story;
   };
 
-  Story.updateArticle = async (storyInstance, story) => {
+  Story.updateStory = async (storyInstance, story) => {
     story = await storyInstance.update(story, { returning: true });
     return story;
+  };
+
+  /**
+   * @function createTags
+   * @description creates tags for a given story
+   *
+   * @param {Object} tag tags to be created
+   * @param {UUID} id id of the story to which tags belong
+   * @param {UUID} authorId id of the author
+   *
+   * @returns {Array} array of tags
+   */
+  Story.createTags = async (tag, id, authorId) => {
+    const tags = tag.map((eachTag) => ({
+      storyId: id,
+      categoryId: eachTag,
+      authorId,
+    }));
+    const response = await Story.bulkCreate(tags);
+    const tagsCreated = response.map((eachTag) => eachTag.dataValues.categoryId);
+
+    return tagsCreated;
+  };
+
+  // /**
+  //  * @function findTags
+  //  * @description find all tags belonging to a story
+  //  *
+  //  * @param {UUID} storyId id of the story to which tags belong
+  //  *
+  //  * @returns {Array} array of tags
+  //  */
+  // Story.findTags = async (storyId) => {
+  //   const tags = await Story.findAll({ where: { storyId } });
+  //   return tags;
+  // };
+
+  Story.checkTagsExistence = async (tag) => {
+    const availableCategory = await Category.findAll({ where: { id: tag } });
+    return availableCategory;
+  };
+
+  /**
+   * @function deleteTags
+   * @description destroys all tags for given story
+   *
+   * @param {UUID} id id of the story to which tags belong
+   *
+   * @returns {Void} returns nothing
+   */
+  Story.deleteTags = async (id) => {
+    await Story.destroy({
+      returning: true,
+      where: { storyId: id },
+    });
   };
 
   return Story;

@@ -30,7 +30,7 @@ module.exports = {
     return response.status(201).json({
       status: 'success',
       message: 'user created successfully',
-      data: { user: user.toJSON(), token },
+      result: { user: user.toJSON(), token },
     });
   },
 
@@ -49,7 +49,7 @@ module.exports = {
 
     return response.status(200).json({
       status: 'success',
-      data: { user: user.toJSON(), token },
+      result: { user: user.toJSON(), token },
     });
   },
 

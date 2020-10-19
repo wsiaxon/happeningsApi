@@ -31,13 +31,13 @@ const twitterConfig = {
 async function facebookAuth({ accessToken }) {
   const appAccessTokenURL = `https://graph.facebook.com/oauth/access_token?client_id=${FACEBOOK_APP_ID}&client_secret=${FACEBOOK_APP_SECRET}&grant_type=client_credentials`;
 
-  const { data: appAccessDetails } = await axios.get(appAccessTokenURL);
+  const { result: appAccessDetails } = await axios.get(appAccessTokenURL);
   const { access_token: appAccessToken } = appAccessDetails;
 
   const verifyUserAccessTokenURI = `
   https://graph.facebook.com/debug_token?input_token=${accessToken}&access_token=${appAccessToken}`;
 
-  const { data: verificationDetails } = await axios.get(verifyUserAccessTokenURI);
+  const { result: verificationDetails } = await axios.get(verifyUserAccessTokenURI);
   const { is_valid: isValid, app_id: appId } = verificationDetails.data;
 
   if (FACEBOOK_APP_ID !== appId) {
@@ -50,7 +50,7 @@ async function facebookAuth({ accessToken }) {
 
   const getUserDataURL = `https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token=${accessToken}`;
 
-  const { data: userData } = await axios.get(getUserDataURL);
+  const { result: userData } = await axios.get(getUserDataURL);
   const { first_name: firstName, last_name: lastName, email } = userData;
   const { url: avatarUrl } = userData.picture.data;
 
@@ -104,7 +104,7 @@ async function createOrFindUser({ firstName, lastName, email }) {
     };
     const status = created ? 201 : 200;
 
-    return { status, data: { user: userDetails, token } };
+    return { status, result: { user: userDetails, token } };
   } catch (error) {
     throw ApplicationError(500, error);
   }

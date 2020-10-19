@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { Sequelize, DataTypes } = require('sequelize');
 const dbConfig = require('../config/sequelize');
+const { getPermissions } = require('./enums');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV.trim() || 'development';
@@ -25,8 +26,18 @@ fs
   .filter((file) => (file.indexOf('.') !== 0)
     && (file !== basename)
     && (file.slice(-3) === '.js'))
-  .forEach((file) => {
+  .forEach(async (file) => {
     const model = require(path.join(__dirname, file))(sequelize, DataTypes);
+    // if (process.env.NODE_ENV !== "production") {
+    //   try {
+    //     await model.sync({ alter: true });
+    //     console.log("AFTER SYNCHING!!!", model.name)
+    //   }
+    //   catch (e) {
+    //     console.log("Error:", model.name)
+    //   }
+    // }
+    
     db[model.name] = model;
   });
 

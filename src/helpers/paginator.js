@@ -11,13 +11,13 @@
 const paginator = async (Source, options) => {
   let data = [];
   const {
-    page,
+    skip,
     limit,
     dataSource,
     dataToSource,
     ...otherOptions
   } = options;
-  const offset = limit * (+page - 1);
+  const offset = limit * +skip;
 
   if (!Source) {
     const { data: result, count } = await dataSource({
@@ -31,17 +31,12 @@ const paginator = async (Source, options) => {
     return { data: result, count };
   }
 
-  const { count } = await Source.findAndCountAll({ ...otherOptions });
-  if (count) {
-    data = await Source.findAll({
-      ...otherOptions,
-      limit,
-      offset,
-      order: [['createdAt', 'DESC']],
-    });
-  }
+  const result = await Source.findAndCountAll({ ...otherOptions,
+    limit,
+    offset,
+    order: [['createdAt', 'DESC']] });
 
-  return { data, count };
+  return { data: result.rows.map(x => x.dataValues), count: result.count };
 };
 
 module.exports = paginator;

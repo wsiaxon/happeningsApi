@@ -1,6 +1,6 @@
-const Models = require('../models');
+const models = require('../models');
 
-const { Category } = Models;
+const { Story } = models;
 
 module.exports = {
   /**
@@ -43,7 +43,7 @@ module.exports = {
    * @returns {Array} returns an array of tag names
    */
   getTagName: async (tags) => {
-    const response = await Category.checkTagsExistence(tags);
+    const response = await Story.checkTagsExistence(tags);
     const tagNames = response.map((eachTag) => eachTag.name);
     return tagNames;
   },

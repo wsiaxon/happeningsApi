@@ -4,6 +4,15 @@ module.exports = (sequelize, DataTypes) => {
   class Comment extends Model {
     static associate(models) {
       // define association here
+      this.belongsTo(models.Comment, {
+        foreignKey: {
+          name: 'parentId',
+          allowNull: true,
+        }
+      })
+      this.hasMany(models.Comment, {
+        foreignKey: 'parentId'
+      })
     }
   }
 
@@ -16,24 +25,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     userId: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,
+    },
+    guestUserName: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     parentId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
+      allownull: true,
       defaultValue: null,
     },
     storyId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
+      allowNull: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    details: {
-      type: DataTypes.STRING,
-    },
-    createdAt: {
-      type: DataTypes.STRING,
+    contents: {
+      type: DataTypes.TEXT,
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,

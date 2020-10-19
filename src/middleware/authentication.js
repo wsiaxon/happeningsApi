@@ -15,7 +15,7 @@ module.exports = {
    */
   verifyToken: (request, response, next) => {
     const authHeader = request.headers.authorization;
-    if (!authHeader) throw new ApplicationError(412, 'authorization header not set');
+    if (!authHeader) throw new ApplicationError(401, 'Authorization has been denied');
 
     const token = authHeader.split(' ')[1];
 
@@ -24,7 +24,7 @@ module.exports = {
 
       const { id } = decodedToken;
       const user = await User.findByPk(id);
-      if (!user) return next(new ApplicationError(403, 'invalid user credentials'));
+      if (!user) return next(new ApplicationError(403, 'Invalid user credentials'));
 
       request.user = user;
 

@@ -5,26 +5,26 @@ module.exports = {
     );
 
     await queryInterface.createTable('StoryCategories', {
-      id: {
-        allowNull: false,
-        primaryKey: true,
-        type: Sequelize.UUID,
-      },
       storyId: {
         type: Sequelize.UUID,
+        references: {
+          model: 'Stories', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
       },
       categoryId: {
-        type: Sequelize.UUID,
-      },
-      authorId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Categories', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

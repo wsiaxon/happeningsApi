@@ -19,38 +19,107 @@
       "variables": {
         "port": {
           "enum": [
-            "3000",
-            "4000",
+            "8080",
             "5000"
           ],
-          "default": "5000"
+          "default": "8080"
         }
       }
     },
     {
-      "url": "https://virtserver.swaggerhub.com/meetKazuki/Happenings/1.0.0",
-      "description": "SwaggerHub API Auto Mocking"
+      "url": "https://happeningslb-2007236471.eu-west-1.elb.amazonaws.com",
+      "description": "Backend API"
+    },
+    {
+      "url": "https://happensapi.herokuapp.com",
+      "description": "Test Preview"
     }
   ],
   "tags": [
     {
-      "name": "admins",
-      "description": "Secured Admin-only calls"
+      "name": "auth",
+      "description": "Authorization endpoints"
     },
     {
-      "name": "users",
-      "description": "Endpoints that can be accessed by users"
+      "name": "account",
+      "description": "Endpoints used in interacting with account info"
+    },
+    {
+      "name": "comments",
+      "description": "Endpoints associated with comments on the website"
+    },
+    {
+      "name": "categories",
+      "description": "Endpoints associated with categories on the website"
     },
     {
       "name": "stories",
-      "description": "Endpoints associated with stories on the website"
+      "description": "Endpoints associated with stories"
+    },
+    {
+      "name": "reports",
+      "description": "Endpoints associated with reports on the website"
+    },
+    {
+      "name": "roles",
+      "description": "Endpoints used in accessing roles"
+    },
+    {
+      "name": "tags",
+      "description": "Endpoints associated with tags"
+    },
+    {
+      "name": "users",
+      "description": "Endpoints used in accessing users"
     }
   ],
   "paths": {
-    "/auth/register": {
+    "/api/auth/login": {
       "post": {
         "tags": [
-          "users"
+          "auth"
+        ],
+        "summary": "sign-in endpoint for users",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "testdeveloper@happenings.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "strongpassword"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. User logged-in successfully."
+          },
+          "400": {
+            "description": "Validation error (incorrect/malformed request)."
+          },
+          "401": {
+            "description": "Unauthorized. Incorrect email or password."
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "account"
         ],
         "summary": "signup endpoint for users",
         "requestBody": {
@@ -99,52 +168,10 @@
         }
       }
     },
-    "/auth/login": {
-      "post": {
-        "tags": [
-          "users"
-        ],
-        "summary": "sign-in endpoint for users",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "testdeveloper@happenings.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "strongpassword"
-                  }
-                },
-                "required": [
-                  "email",
-                  "password"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success. User logged-in successfully."
-          },
-          "400": {
-            "description": "Validation error (incorrect/malformed request)."
-          },
-          "401": {
-            "description": "Unauthorized. Incorrect email or password."
-          }
-        }
-      }
-    },
-    "/auth/verify_email/{token}": {
+    "/api/auth/verify_email/{token}": {
       "get": {
         "tags": [
-          "users"
+          "account"
         ],
         "summary": "Endpoint to verify user email address.",
         "parameters": [
@@ -168,10 +195,10 @@
         }
       }
     },
-    "/auth/resend_email": {
+    "/api/auth/resend_email": {
       "post": {
         "tags": [
-          "users"
+          "account"
         ],
         "summary": "Endpoint to resend verification email",
         "requestBody": {
@@ -202,10 +229,10 @@
         }
       }
     },
-    "/auth/forgot_password": {
+    "/api/auth/forgot_password": {
       "post": {
         "tags": [
-          "users"
+          "account"
         ],
         "summary": "Endpoint to request for a password change in the event a user cannot login with his correct credentials.",
         "requestBody": {
@@ -239,10 +266,10 @@
         }
       }
     },
-    "/auth/reset_password/{id}/{token}": {
+    "/api/auth/reset_password/{id}/{token}": {
       "patch": {
         "tags": [
-          "users"
+          "account"
         ],
         "summary": "Endpoint to change the password for a non logged-in user.",
         "parameters": [
@@ -290,10 +317,10 @@
         }
       }
     },
-    "/auth/change_password": {
+    "/api/auth/change_password": {
       "patch": {
         "tags": [
-          "users"
+          "account"
         ],
         "summary": "Endpoint to change the password of a logged-in user.",
         "security": [
@@ -334,10 +361,10 @@
         }
       }
     },
-    "/admin/users": {
+    "/api/user/getAll": {
       "get": {
         "tags": [
-          "admins"
+          "users"
         ],
         "summary": "Endpoint to get all the users in the database.",
         "security": [
@@ -348,10 +375,10 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page",
+            "name": "skip",
             "schema": {
               "type": "integer",
-              "default": 1
+              "default": 0
             }
           },
           {
@@ -373,7 +400,173 @@
         }
       }
     },
-    "/stories": {
+    "/api/user/create": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Endpoint to create a user",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Michael"
+                  },
+                  "bio": {
+                    "type": "string",
+                    "example": "Why we should watch our back..."
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "The username of the user",
+                    "example": "user1"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "The email address of the user",
+                    "example": "user@email.com"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "enum": [
+                      "male",
+                      "female"
+                    ]
+                  },
+                  "profilePic": {
+                    "type": "string",
+                    "description": "The profile picture of the user",
+                    "example": "https://placeholder.com/350"
+                  },
+                  "roles": {
+                    "type": "array",
+                    "description": "array of roles of the user.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "Admin",
+                      "Developer"
+                    ]
+                  }
+                },
+                "required": [
+                  "name",
+                  "username",
+                  "email",
+                  "password",
+                  "roles",
+                  "gender"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success. Story successfully created."
+          },
+          "400": {
+            "description": "Validation Error. One or more required fields are missing from the requestBody payload"
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
+          }
+        }
+      }
+    },
+    "/api/story/getAll": {
+      
+      "get": {
+        "tags": [
+          "stories"
+        ],
+        "summary": "Endpoint to retrieve all the stories based on status. Returns all the stories in the database if status is not supplied.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "description": "parameter to retrieve records (based on \"status\" query) from the database",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OPEN",
+                "SUBMITTED",
+                "APPROVED",
+                "PUBLISHED",
+                "REJECTED",
+                "SCHEDULED"
+              ],
+              "default": "OPEN"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Stories are successfully retrieved from the database."
+          }
+        }
+      }
+    },
+    "/api/story/getStatusCounts": {
+      
+      "get": {
+        "tags": [
+          "stories"
+        ],
+        "summary": "Endpoint to retrieve the counts of all status.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "statuses",
+            "description": "parameter to retrieve counts (based on \"statuses\" query) from the database",
+            "schema": {
+              "type": "Array",
+              "default": []
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Status counts are successfully retrieved from the database."
+          }
+        }
+      }
+    },
+    "/api/story/create": {      
       "post": {
         "tags": [
           "stories"
@@ -403,20 +596,10 @@
                     "description": "The body of the article/story.",
                     "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. At risus viverra adipiscing at in tellus integer feugiat."
                   },
-                  "bannerImageId": {
+                  "bannerImageUrl": {
                     "type": "string",
                     "description": "The banner image of the story",
                     "example": "https://placeholder.com/350"
-                  },
-                  "guestAuthor": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "example": [
-                      "Guest Author 1",
-                      "Guest Author 2"
-                    ]
                   },
                   "tags": {
                     "type": "array",
@@ -441,10 +624,10 @@
                   "status": {
                     "type": "string",
                     "enum": [
-                      "draft",
+                      "open",
                       "published"
                     ],
-                    "default": "draft"
+                    "default": "open"
                   }
                 },
                 "required": [
@@ -466,38 +649,78 @@
             "description": "Authorization Error. User making request is not authenticated"
           }
         }
-      },
+      }
+    },
+    "/api/story/{id}": {
       "get": {
         "tags": [
           "stories"
         ],
-        "summary": "Endpoint to retrieve all the stories based on status. Returns all the stories in the database if status is not supplied.",
+        "summary": "Endpoint to retrieve a story by its id",
         "parameters": [
           {
-            "in": "query",
-            "name": "status",
-            "description": "parameter to retrieve records (based on \"status\" query) from the database",
+            "name": "id",
+            "in": "path",
+            "description": "id of the story",
+            "required": true,
             "schema": {
-              "type": "string",
-              "enum": [
-                "draft",
-                "scheduled",
-                "pending",
-                "approved",
-                "rejected"
-              ],
-              "default": "draft"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success. Stories are successfully retrieved from the database."
+            "description": "Success. Story successfully retrieved."
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
+          },
+          "404": {
+            "description": "Not Found Error. Story with id does not exist in the database."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "stories"
+        ],
+        "summary": "Endpoint to update a story by its id",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Unique identifier (id) of the story",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Story successfully updated."
+          },
+          "400": {
+            "description": "Validation Error."
+          },
+          "401": {
+            "description": "Unauthorized. Request has not been authenticated."
+          },
+          "403": {
+            "description": "Access denied. Story doesn't belong to who is trying to access the resource."
+          },
+          "404": {
+            "description": "Not Found Error. Story with id does not exist in the database."
           }
         }
       }
     },
-    "/stories/{slug}": {
+    "/api/story/{slug}": {
       "get": {
         "tags": [
           "stories"
@@ -562,6 +785,284 @@
           },
           "404": {
             "description": "Not Found Error. Story with slug does not exist in the database."
+          }
+        }
+      }
+    },
+    "/api/role/getAll": {      
+      "get": {
+        "tags": [
+          "roles"
+        ],
+        "summary": "Endpoint to retrieve all the roles. Returns all the roles in the database.",
+        "responses": {
+          "200": {
+            "description": "Success. Roles are successfully retrieved from the database."
+          }
+        }
+      }
+    },
+    "/api/role/create": {      
+      "post": {
+        "tags": [
+          "roles"
+        ],
+        "summary": "Endpoint to create a role",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Author"
+                  },
+                  "permissions": {
+                    "type": "array",
+                    "description": "array of permissions of the role.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "User",
+                      "Story.Create"
+                    ]
+                  }
+                },
+                "required": [
+                  "name",
+                  "permissions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success. Story successfully created."
+          },
+          "400": {
+            "description": "Validation Error. One or more required fields are missing from the requestBody payload"
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
+          }
+        }
+      }
+    },
+    "/api/category/getAll": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Endpoint to retrieve a paged result of categories",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skip",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Story successfully retrieved."
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
+          },
+          "404": {
+            "description": "Not Found Error. Story with id does not exist in the database."
+          }
+        }
+      }
+    },
+    "/api/category/create": {
+      "post": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Endpoint to create a category",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Entertainment"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name",
+                  "permissions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success. Story successfully created."
+          },
+          "400": {
+            "description": "Validation Error. One or more required fields are missing from the requestBody payload"
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
+          }
+        }
+      }
+    },
+    "/api/category/{id}": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Endpoint to retrieve a category by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the category",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Story successfully retrieved."
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
+          },
+          "404": {
+            "description": "Not Found Error. Story with id does not exist in the database."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Endpoint to update a category by its id",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Unique identifier (id) of the story",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Category successfully updated."
+          },
+          "400": {
+            "description": "Validation Error."
+          },
+          "401": {
+            "description": "Unauthorized. Request has not been authenticated."
+          },
+          "403": {
+            "description": "Access denied. Authorization is denied to access the resource."
+          },
+          "404": {
+            "description": "Not Found Error. Category with id does not exist in the database."
+          }
+        }
+      }
+    },
+    "/api/tag/getAll": {
+      
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Endpoint to retrieve all the tags. Returns all the tags in the database.",
+        "responses": {
+          "200": {
+            "description": "Success. Tags are successfully retrieved from the database."
+          }
+        }
+      }
+    },
+    "/api/tag/create": {
+      "post": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Endpoint to create a tag",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Landscape"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success. Tag successfully created."
+          },
+          "400": {
+            "description": "Validation Error. One or more required fields are missing from the requestBody payload"
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
           }
         }
       }

@@ -2,18 +2,31 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Categories', {
       id: {
-        allowNull: false,
+        // allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
       },
-      name: {
+      title: {
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
+      summary: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       slug: {
         type: Sequelize.STRING,
       },
-      parent: {
+      parentId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Categories', // name of Target model
+          key: 'id', // key in Target model that we're referencing
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
@@ -23,7 +36,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

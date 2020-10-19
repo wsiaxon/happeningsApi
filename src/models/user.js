@@ -3,62 +3,101 @@ const { config } = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { Model } = require('sequelize');
 const { urlSafeRandomString } = require('../helpers/auth');
+const { Gender } = require('./enums');
+// const UserRole = require('./userRole');
+// const AuthorStory = require('./authorStory');
 
 config();
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      this.hasMany(models.Story, {
-        foreignKey: 'authorId',
-        as: 'stories',
-        onDelete: 'CASCADE',
+      this.belongsToMany(models.Story, {
+        through: models.AuthorStory,
+        foreignKey: 'userId',
+        otherKey: 'storyId',
       });
+      
+      this.belongsToMany(models.Role, { through: models.UserRole, foreignKey: 'userId', otherKey: 'roleId' });
     }
   }
 
   User.init({
     id: {
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
     },
-    firstName: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: {
+    username: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    bio: {
+      type: DataTypes.STRING,
+    },
+    // phone: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
     password: {
       type: DataTypes.STRING,
+    },
+    gender: {
+      type: DataTypes.ENUM(Object.values(Gender)),
+      allowNull: true,
     },
     profilePic: {
       type: DataTypes.STRING,
       get() {
-        return this.getDataValue('profilePic') || 'https://placeholder.com/150';
+        return this.getDataValue('profilePic') || 'https://breakthrough.org/wp-content/uploads/2018/10/default-placeholder-image.png';
       },
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    verifyToken: {
+    emailVerificationToken: {
       type: DataTypes.STRING,
       defaultValue: null,
     },
-    expireVerifyToken: {
+    emailTokenExpiryDate: {
       type: DataTypes.DATE,
     },
-    isVerified: {
+    isEmailVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    isLockedOut: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    failedCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    lockEndDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
   }, {
     sequelize,
     modelName: 'User',
@@ -71,20 +110,20 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate(async (users) => {
     users.password = await users.generatePasswordHash();
 
-    if (!users.verifyToken) {
-      users.verifyToken = urlSafeRandomString({ length: 64 });
+    if (!users.emailVerificationToken) {
+      users.emailVerificationToken = urlSafeRandomString({ length: 64 });
     }
 
-    if (users.changed('verifyToken')) {
+    if (users.changed('emailVerificationToken')) {
       const expiryDate = new Date();
       expiryDate.setMinutes(expiryDate.getMinutes() + 5);
-      users.expireVerifyToken = expiryDate;
+      users.emailTokenExpiryDate = expiryDate;
     }
 
-    if (!users.expireVerifyToken) {
+    if (!users.emailTokenExpiryDate) {
       const expiryDate = new Date();
       expiryDate.setMinutes(expiryDate.getMinutes() + 2);
-      users.expireVerifyToken = expiryDate;
+      users.emailTokenExpiryDate = expiryDate;
     }
   });
 
@@ -116,7 +155,7 @@ module.exports = (sequelize, DataTypes) => {
    */
   User.prototype.toJSON = function toJSON() {
     const {
-      password, verifyToken, expireVerifyToken, ...safedata
+      password, emailVerificationToken, emailTokenExpiryDate, ...safedata
     } = this.get();
     return safedata;
   };

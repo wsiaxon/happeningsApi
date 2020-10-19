@@ -10,13 +10,14 @@ module.exports = (sequelize, DataTypes) => {
   PermissionGroup.init({
     id: {
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true
     },
     permissions: {
       type: DataTypes.ARRAY(DataTypes.STRING),

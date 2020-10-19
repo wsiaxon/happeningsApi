@@ -1,0 +1,51 @@
+module.exports = {
+  up: async (queryInterface) => queryInterface.bulkInsert('Categories', [
+    {
+      id: 1,
+      title: 'Entertainment',
+      summary: 'All about entertainment',
+      slug: 'entertainment-1',
+      parentId: null,
+      isDeleted: false,
+      createdAt: new Date(),
+    },
+    {
+      id: 2,
+      title: 'Travel',
+      summary: 'All about travel',
+      slug: 'travel-2',
+      parentId: null,
+      isDeleted: false,
+      createdAt: new Date(),
+    },
+    {
+      id: 3,
+      title: 'Sport',
+      summary: 'All about sport.',
+      slug: 'sport-3',
+      parentId: null,
+      isDeleted: false,
+      createdAt: new Date(),
+    },
+    {
+      id: 4,
+      title: 'Politics',
+      summary: 'All about politics.',
+      slug: 'politics-4',
+      parentId: null,
+      isDeleted: false,
+      createdAt: new Date(),
+    },
+    {
+      id: 5,
+      title: 'Football',
+      summary: 'All about football.',
+      slug: 'football-5',
+      parentId: 3,
+      isDeleted: false,
+      createdAt: new Date(),
+    },
+  ], {}),
+
+  down: async (queryInterface) => queryInterface.bulkDelete('Categories', null, {}),
+};

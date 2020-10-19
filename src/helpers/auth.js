@@ -2,6 +2,7 @@ const { config } = require('dotenv');
 const crypto = require('crypto');
 const cryptoRandomString = require('crypto-random-string');
 const jwt = require('jsonwebtoken');
+const AppConsts = require('../appconsts');
 
 config();
 
@@ -30,7 +31,7 @@ function verifyPassword(encodedPassword, password) {
   return argon2i.verify(encodedPassword, password);
 }
 
-function generateToken({ id }, duration = '24h') {
+function generateToken({ id }, duration = AppConsts.JwtDuration) {
   return jwt.sign({ id }, process.env.JWT_KEY, { expiresIn: duration });
 }
 

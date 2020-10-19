@@ -22,7 +22,7 @@ describe('User controller', () => {
     // create request object and put value that you required to check in function
     const req = {
       params: {
-        page: 1,
+        skip: 0,
       },
     };
 

@@ -16,6 +16,7 @@ class ApplicationError extends Error {
     this.statusCode = statusCode || 500;
     this.message = message;
     this.errors = errors;
+    this.result = undefined;
   }
 }
 
@@ -32,6 +33,7 @@ class NotFoundError extends ApplicationError {
    */
   constructor(message) {
     super(404, message || 'resource not found');
+    this.result = undefined;
   }
 }
 
