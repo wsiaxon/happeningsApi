@@ -13,14 +13,14 @@ router.get(
 );
 
 router.post(
-  '/',
-  verifyToken,
+  '/create',
+  // verifyToken,
   validator(createCategorySchema),
   asyncWrapper(createCategory),
 );
 
 router.get(
-  '/:id',
+  '/get/:id',
   asyncWrapper(getCategoryById),
 );
 

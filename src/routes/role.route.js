@@ -20,7 +20,7 @@ router.post(
 );
 
 router.get(
-  '/:id',
+  '/get/:id',
   asyncWrapper(getRoleById),
 );
 

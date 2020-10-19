@@ -1,5 +1,6 @@
 const model = require('../models');
 const { NotFoundError } = require('../helpers/error');
+const { slugify, getTagName } = require('../helpers/utils');
 const paginator = require('../helpers/paginator');
 
 const { Category } = model;

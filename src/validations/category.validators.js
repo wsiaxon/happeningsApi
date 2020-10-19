@@ -2,7 +2,7 @@ const { check } = require('express-validator');
 
 module.exports = {
   createCategorySchema: [
-    check('name')
+    check('title')
       .exists()
       .trim()
       .withMessage('name of the category is required')
@@ -11,13 +11,12 @@ module.exports = {
 
     check('parentId')
       .optional()
-      .trim()
       .isNumeric({ min: 0})
       .withMessage('parent Id cannot be less than 0'),
   ],
 
   editCategorySchema: [
-    check('name')
+    check('title')
       .optional()
       .trim()
       .matches(/[a-zA-Z]{3,}/)
@@ -25,7 +24,6 @@ module.exports = {
 
     check('parentId')
       .optional()
-      .trim()
       .isNumeric({ min: 0})
       .withMessage('parent Id cannot be less than 0'),
   ],

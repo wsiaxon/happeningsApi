@@ -21,13 +21,13 @@ router.get(
 
 router.post(
   '/create',
-  verifyToken,
-  validator(createStorySchema),
+  // verifyToken,
+  // validator(createStorySchema),
   asyncWrapper(createStory),
 );
 
 router.get(
-  '/:id',
+  '/get/:id',
   asyncWrapper(getStoryById),
 );
 
@@ -37,9 +37,9 @@ router.get(
 // );
 
 router.put(
-  '/:id',
-  verifyToken,
-  asyncWrapper(isAuthor),
+  'update/:id',
+  // verifyToken,
+  // asyncWrapper(isAuthor),
   validator(editStorySchema),
   asyncWrapper(editStory),
 );
