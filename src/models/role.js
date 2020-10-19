@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
+    description: {
+      type: DataTypes.STRING
+    },
     grantedPermissions: {
       type: DataTypes.ARRAY(DataTypes.STRING),
     },

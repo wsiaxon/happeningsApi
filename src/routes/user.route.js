@@ -9,8 +9,8 @@ const router = Router();
 
 router.get(
   '/getAll',
-  verifyToken,
-  isAdmin,
+  // verifyToken,
+  // isAdmin,
   asyncWrapper(getAllUsers),
 );
 
