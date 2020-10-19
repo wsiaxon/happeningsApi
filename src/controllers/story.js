@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const { v4: uuid } = require('uuid');
 const { ApplicationError } = require('../helpers/error');
 const { User, Story, StoryCategories, Category } = require('../models');
@@ -23,7 +23,7 @@ module.exports = {
    * @returns {Object} callback that executes the controller
    */
   getAllStories: async (request, response) => {
-    const { status, skip = 0, limit = 10 } = request.query;
+    const { status, keyword='', skip = 0, limit = 10 } = request.query;
     let isStatus = false;
     if(!!status){
       for(let stat in StoryStatus){
@@ -38,10 +38,10 @@ module.exports = {
     let result;
 
     if (!isStatus) {
-      result = await paginator(Story, { skip, limit, include: [{ model: Category }] });
+      result = await paginator(Story, { skip, limit, where: { title: {[Op.iLike]: `%${keyword}%`}}, include: [{ model: Category }] });
     }
     else {
-      result = await paginator(Story, { skip, limit, where: { status: status.toUpperCase() }, include: [{ model: Category, attributes: [] }] });
+      result = await paginator(Story, { skip, limit, where: { status: status.toUpperCase(), title: {[Op.iLike]: `%${keyword}%`} }, include: [{ model: Category, attributes: [] }] });
     }
 
     const message = result.data.length
@@ -59,8 +59,8 @@ module.exports = {
     });
   },
 
-  getStstusCounts: async (request, response) => {
-    // const { skip = 1, limit = 10 } = request.query;
+  getStatusCounts: async (request, response) => {
+    // const { all, open, submitted, approved, published, rejected, scheduled } = request.query;
 
     const all = await Story.count();
     const open = await Story.count({ where: { status: 'OPEN'}});
