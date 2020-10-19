@@ -16,16 +16,16 @@ router.get(
 
 router.post(
   '/',
-  verifyToken,
-  isAdmin,
+  // verifyToken,
+  // isAdmin,
   validator(createUserSchema),
   asyncWrapper(createUser),
 );
 
 router.get(
-  '/:id',
-  verifyToken,
-  isAdmin,
+  '/get/:id',
+  // verifyToken,
+  // isAdmin,
   asyncWrapper(getUserById),
 );
 
