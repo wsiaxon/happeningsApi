@@ -27,7 +27,7 @@
       }
     },
     {
-      "url": "https://happeningslb-2007236471.eu-west-1.elb.amazonaws.com",
+      "url": "http://happenings-app-lb-1972445854.eu-west-1.elb.amazonaws.com",
       "description": "Backend API"
     },
     {
