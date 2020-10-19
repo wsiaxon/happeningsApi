@@ -74,7 +74,7 @@
     }
   ],
   "paths": {
-    "/auth/login": {
+    "/api/auth/login": {
       "post": {
         "tags": [
           "auth"
@@ -116,7 +116,7 @@
         }
       }
     },
-    "/auth/register": {
+    "/api/auth/register": {
       "post": {
         "tags": [
           "account"
@@ -168,7 +168,7 @@
         }
       }
     },
-    "/auth/verify_email/{token}": {
+    "/api/auth/verify_email/{token}": {
       "get": {
         "tags": [
           "account"
@@ -195,7 +195,7 @@
         }
       }
     },
-    "/auth/resend_email": {
+    "/api/auth/resend_email": {
       "post": {
         "tags": [
           "account"
@@ -229,7 +229,7 @@
         }
       }
     },
-    "/auth/forgot_password": {
+    "/api/auth/forgot_password": {
       "post": {
         "tags": [
           "account"
@@ -266,7 +266,7 @@
         }
       }
     },
-    "/auth/reset_password/{id}/{token}": {
+    "/api/auth/reset_password/{id}/{token}": {
       "patch": {
         "tags": [
           "account"
@@ -317,7 +317,7 @@
         }
       }
     },
-    "/auth/change_password": {
+    "/api/auth/change_password": {
       "patch": {
         "tags": [
           "account"
@@ -361,7 +361,7 @@
         }
       }
     },
-    "/users": {
+    "/api/user/getAll": {
       "get": {
         "tags": [
           "users"
@@ -398,7 +398,9 @@
             "description": "Forbidden. A non-admin is trying to access endpoint."
           }
         }
-      },
+      }
+    },
+    "/api/user/create": {
       "post": {
         "tags": [
           "users"
@@ -482,7 +484,7 @@
         }
       }
     },
-    "/stories": {
+    "/api/story/getAll": {
       
       "get": {
         "tags": [
@@ -497,14 +499,38 @@
             "schema": {
               "type": "string",
               "enum": [
-                "open",
-                "submitted",
-                "approved",
-                "published",
-                "rejected",
-                "scheduled"
+                "OPEN",
+                "SUBMITTED",
+                "APPROVED",
+                "PUBLISHED",
+                "REJECTED",
+                "SCHEDULED"
               ],
-              "default": "open"
+              "default": "OPEN"
+            }
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
             }
           }
         ],
@@ -513,7 +539,34 @@
             "description": "Success. Stories are successfully retrieved from the database."
           }
         }
-      },
+      }
+    },
+    "/api/story/getStatusCounts": {
+      
+      "get": {
+        "tags": [
+          "stories"
+        ],
+        "summary": "Endpoint to retrieve the counts of all status.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "statuses",
+            "description": "parameter to retrieve counts (based on \"statuses\" query) from the database",
+            "schema": {
+              "type": "Array",
+              "default": []
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Status counts are successfully retrieved from the database."
+          }
+        }
+      }
+    },
+    "/api/story/create": {      
       "post": {
         "tags": [
           "stories"
@@ -598,7 +651,7 @@
         }
       }
     },
-    "/stories/{id}": {
+    "/api/story/{id}": {
       "get": {
         "tags": [
           "stories"
@@ -667,7 +720,7 @@
         }
       }
     },
-    "/stories/{slug}": {
+    "/api/story/{slug}": {
       "get": {
         "tags": [
           "stories"
@@ -736,8 +789,7 @@
         }
       }
     },
-    "/roles": {
-      
+    "/api/role/getAll": {      
       "get": {
         "tags": [
           "roles"
@@ -748,7 +800,9 @@
             "description": "Success. Roles are successfully retrieved from the database."
           }
         }
-      },
+      }
+    },
+    "/api/role/create": {      
       "post": {
         "tags": [
           "roles"
@@ -802,19 +856,44 @@
         }
       }
     },
-    "/categories": {
-      
+    "/api/category/getAll": {
       "get": {
         "tags": [
           "categories"
         ],
-        "summary": "Endpoint to retrieve all the categories. Returns all the categories in the database.",
+        "summary": "Endpoint to retrieve a paged result of categories",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skip",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success. Categories were successfully retrieved from the database."
+            "description": "Success. Story successfully retrieved."
+          },
+          "401": {
+            "description": "Authorization Error. User making request is not authenticated"
+          },
+          "404": {
+            "description": "Not Found Error. Story with id does not exist in the database."
           }
         }
-      },
+      }
+    },
+    "/api/category/create": {
       "post": {
         "tags": [
           "categories"
@@ -863,44 +942,7 @@
         }
       }
     },
-    "/categories/paged": {
-      "get": {
-        "tags": [
-          "categories"
-        ],
-        "summary": "Endpoint to retrieve a paged result of categories",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "skip",
-            "schema": {
-              "type": "integer",
-              "default": 0
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success. Story successfully retrieved."
-          },
-          "401": {
-            "description": "Authorization Error. User making request is not authenticated"
-          },
-          "404": {
-            "description": "Not Found Error. Story with id does not exist in the database."
-          }
-        }
-      }
-    },
-    "/categories/{id}": {
+    "/api/category/{id}": {
       "get": {
         "tags": [
           "categories"
@@ -969,7 +1011,7 @@
         }
       }
     },
-    "/tags": {
+    "/api/tag/getAll": {
       
       "get": {
         "tags": [
@@ -981,7 +1023,9 @@
             "description": "Success. Tags are successfully retrieved from the database."
           }
         }
-      },
+      }
+    },
+    "/api/tag/create": {
       "post": {
         "tags": [
           "tags"
