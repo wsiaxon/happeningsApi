@@ -5,6 +5,7 @@ module.exports = {
     {
       id: 1,
       name: 'Admin',
+      description: 'The super admin role',
       grantedPermissions: [
         ...getPermissions("User"),
         ...getPermissions("Role"),

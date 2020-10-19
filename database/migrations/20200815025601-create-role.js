@@ -12,6 +12,9 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      description: {
+        type: Sequelize.STRING,
+      },
       grantedPermissions: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },
