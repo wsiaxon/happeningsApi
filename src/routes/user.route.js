@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getAllUsers, getUserById, createUser } = require('../controllers/user');
+const { getAllUsers, getById, createUser } = require('../controllers/user');
 const asyncWrapper = require('../middleware/asyncWrapper');
 const { createUserSchema } = require('../validations/user.validators');
 const validator = require('../middleware/validator');
@@ -26,7 +26,7 @@ router.get(
   '/get/:id',
   // verifyToken,
   // isAdmin,
-  asyncWrapper(getUserById),
+  asyncWrapper(getById),
 );
 
 module.exports = router;
