@@ -66,14 +66,22 @@ const RolePermissions = {
         Delete: "Comment.Delete"
     }
 }
+const getAllPermissions = () => {
+    let allPermissions = [];
+    for(let prop in RolePermissions){
+        allPermissions.push(...getPermissions(prop));
+    }
+    
+    return allPermissions;
+}
 
 const getPermissions = (permissionName) => {
     return findPermissions(permissionName, RolePermissions);
 }
 
-function findPermissions(permissionName, permissionsObject){  
-    let keys = permissionName.split('.');
+function findPermissions(permissionName, permissionsObject){ 
     let permissions = [];
+    let keys = permissionName.split('.');
     let permissionNameValue = permissionsObject[keys[0]];
 
     if(permissionNameValue === undefined || !(typeof(permissionNameValue) === "string" || typeof(permissionNameValue) === "object"))
@@ -94,4 +102,4 @@ function findPermissions(permissionName, permissionsObject){
     return [...findPermissions(others.join('.'), permissionNameValue)];
 }
 
-module.exports = { Gender, StoryChannel, StoryStatus, StorySectionType, AuthorType, RolePermissions, getPermissions }
+module.exports = { Gender, StoryChannel, StoryStatus, StorySectionType, AuthorType, RolePermissions, getAllPermissions, getPermissions }
