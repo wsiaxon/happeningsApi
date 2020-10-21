@@ -2,13 +2,13 @@ const models = require('../models');
 const { NotFoundError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
 
-const { User, Role, Story } = models;
+const { User, Role, UserRole } = models;
 
 module.exports = {
   getAllUsers: async (request, response) => {
     const { skip = 0, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(User, { skip, limit, include: [{ model: Role, attributes: [] }] });
+    const { data, count } = await paginator(User, { skip, limit, include: [{ model: Role, as: 'roles', attributes: [] }] });
 
     return response.status(200).json({
       status: 'success',
@@ -24,16 +24,19 @@ module.exports = {
     });
   },
   
-  getUserById: async (request, response) => {
+  getById: async (request, response) => {
     const { id } = request.params;
 
-    const user = await User.findByPk(id, { include: [{ model: Role, attributes: [] },{ model: Story, attributes: [] }] });
+    const user = await User.findByPk(id, { include: [{ model: Role, as: 'roles' }], attributes: { exclude: [ {model:UserRole}]} });
 
     if (!user) throw new NotFoundError(`user with id ${id} doesn't exist`);
+    let { password, roles, dataValues, ...others } = user;
+    dataValues.roles = roles.map(r => { return { id: r.id, name: r.name } })
+    dataValues.roleNames = roles.map(r => r.name )
 
     return response.status(200).json({
       status: 'success',
-      result: user,
+      result: dataValues,
     });
   },
   

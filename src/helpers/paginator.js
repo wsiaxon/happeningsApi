@@ -25,6 +25,7 @@ const paginator = async (Source, options) => {
       options: {
         limit,
         offset,
+        distinct:true,
         ...otherOptions,
       },
     });
@@ -34,6 +35,7 @@ const paginator = async (Source, options) => {
   const result = await Source.findAndCountAll({ ...otherOptions,
     limit,
     offset,
+    distinct:true,
     order: [['createdAt', 'DESC']] });
 
   return { data: result.rows.map(x => x.dataValues), count: result.count };

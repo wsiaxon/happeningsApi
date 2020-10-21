@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: 'storyId',
       });
       
-      this.belongsToMany(models.Role, { through: models.UserRole, foreignKey: 'userId', otherKey: 'roleId' });
+      this.belongsToMany(models.Role, { through: models.UserRole, as: 'roles', foreignKey: 'userId', otherKey: 'roleId' });
     }
   }
 

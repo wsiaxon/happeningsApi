@@ -19,8 +19,7 @@ module.exports = {
       },
       index: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
       contents: {
         type: Sequelize.TEXT,
@@ -39,7 +38,13 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
       },
-    });
+    },{
+      indexes: [
+      {
+          unique: true,
+          fields: ['storyId', 'index']
+      }
+  ]});
   },
 
   down: async (queryInterface) => {

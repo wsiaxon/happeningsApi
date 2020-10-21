@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getAllUsers, getUserById, createUser } = require('../controllers/user');
+const { getAllUsers, getById, createUser } = require('../controllers/user');
 const asyncWrapper = require('../middleware/asyncWrapper');
 const { createUserSchema } = require('../validations/user.validators');
 const validator = require('../middleware/validator');
@@ -16,17 +16,17 @@ router.get(
 
 router.post(
   '/',
-  verifyToken,
-  isAdmin,
+  // verifyToken,
+  // isAdmin,
   validator(createUserSchema),
   asyncWrapper(createUser),
 );
 
 router.get(
-  '/:id',
-  verifyToken,
-  isAdmin,
-  asyncWrapper(getUserById),
+  '/get/:id',
+  // verifyToken,
+  // isAdmin,
+  asyncWrapper(getById),
 );
 
 module.exports = router;

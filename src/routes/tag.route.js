@@ -13,14 +13,14 @@ router.get(
 );
 
 router.post(
-  '/',
-  verifyToken,
-  validator(createTagSchema),
+  '/create',
+  // verifyToken,
+  // validator(createTagSchema),
   asyncWrapper(createTag),
 );
 
 router.get(
-  '/:id',
+  '/get/:id',
   asyncWrapper(getTagById),
 );
 

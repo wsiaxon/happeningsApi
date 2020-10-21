@@ -1,11 +1,19 @@
 const model = require('../models');
 const { NotFoundError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
-const { getPermissions } = require('../models/enums');
+const { getPermissions, getAllPermissions } = require('../models/enums');
 
 const { Role } = model;
 
 module.exports = {
+  getAllPermissions: async (request, response) => {
+
+    return response.status(200).json({
+      status: 'success',
+      result: getAllPermissions().map(x => { return { name: x} })
+    });
+  },
+
   getAllRoles: async (request, response) => {
     const { skip = 0, limit = 10 } = request.query;
 
@@ -22,17 +30,22 @@ module.exports = {
     });
   },
 
-  getPagedRoles: async (request, response) => {
-    const { skip = 1, limit = 10 } = request.query;
+  getRoleForEditById: async (request, response) => {
+    const { id } = request.params;
 
-    const { data, count } = await paginator(Role, { skip, limit });
+    const role = await Role.findByPk(id);
+
+    if (!role) throw new NotFoundError(`role with id ${id} doesn't exist`);
+
+    var permissions = getAllPermissions();
 
     return response.status(200).json({
       status: 'success',
-      result: data,
-      count,
-      skip: +skip,
-      limit: +limit,
+      result: {
+        role,
+        permissions,
+        grantedPermissionNames: role.grantedPermissions
+      }
     });
   },
   
@@ -45,7 +58,7 @@ module.exports = {
 
     return response.status(200).json({
       status: 'success',
-      result: role.toJSON(),
+      result: role,
     });
   },
   

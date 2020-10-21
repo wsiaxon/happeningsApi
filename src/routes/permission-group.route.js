@@ -19,14 +19,14 @@ router.get(
 );
 
 router.post(
-  '/',
+  '/create',
   verifyToken,
   validator(createPermissionGroupSchema),
   asyncWrapper(createPermissionGroup),
 );
 
 router.get(
-  '/:id',
+  '/get/:id',
   asyncWrapper(getPermissionGroupById),
 );
 

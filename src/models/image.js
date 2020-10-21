@@ -18,17 +18,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    attribute: {
+    attribution: {
       type: DataTypes.STRING,
     },
     url: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    size: {
-      type: DataTypes.INTEGER,
-    },
-    dimensions: {
+    metadata: {
       type: DataTypes.STRING,
     },
     isDeleted: {

@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   class Story extends Model {
     static associate(models) {
       this.belongsToMany(models.User, {
+        as: 'authors',
         through: models.AuthorStory,
         foreignKey: 'storyId',
         otherKey: 'userId',
@@ -16,10 +17,11 @@ module.exports = (sequelize, DataTypes) => {
 
       this.hasMany(models.StorySection, {
         foreignKey: 'storyId',
+        as: 'sections',
       });
 
       this.belongsToMany(models.Category, {
-        // as: 'categories',
+        as: 'categories',
         through: models.StoryCategory,
         foreignKey: 'storyId',
         otherKey: 'categoryId',
@@ -27,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       
       this.belongsToMany(models.Tag, {
         through: models.StoryTag,
+        as: 'tags',
         foreignKey: 'storyId',
         otherKey: 'tagId'
       });
@@ -52,15 +55,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       // unique: true,
     },
-    title: {
+    headline: {
       type: DataTypes.STRING,
     },
-    subTitle: {
+    subHeadline: {
       type: DataTypes.STRING,
     },
-    content: {
-      type: DataTypes.TEXT,
+    summary: {
+      type: DataTypes.STRING,
     },
+    // content: {
+    //   type: DataTypes.TEXT,
+    // },
     // authors: {
     //   type: Sequelize.ARRAY(DataTypes.UUID),
     // },

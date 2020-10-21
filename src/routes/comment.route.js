@@ -8,25 +8,19 @@ const { verifyToken, isAdmin } = require('../middleware/authentication');
 const router = Router();
 
 router.get(
-  '/',
-  verifyToken,
-  asyncWrapper(getAllComments),
-);
-
-router.get(
   '/getAll',
   asyncWrapper(getAllComments),
 );
 
 router.post(
-  '/',
+  '/create',
   verifyToken,
   validator(createCommentSchema),
   asyncWrapper(createComment),
 );
 
 router.get(
-  '/:id',
+  '/get/:id',
   asyncWrapper(getCommentById),
 );
 
