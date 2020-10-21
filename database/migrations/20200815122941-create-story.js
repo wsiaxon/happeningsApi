@@ -23,15 +23,18 @@ module.exports = {
       slug: {
         type: Sequelize.STRING,
       },
-      title: {
+      headline: {
         type: Sequelize.STRING,
       },
-      subTitle: {
+      subHeadline: {
         type: Sequelize.STRING,
       },
-      content: {
-        type: Sequelize.TEXT,
+      summary: {
+        type: Sequelize.STRING,
       },
+      // content: {
+      //   type: Sequelize.TEXT,
+      // },
       // authorId: {
       //   type: Sequelize.INTEGER,
       //   references: {

@@ -2,7 +2,7 @@ const models = require('../models');
 const { NotFoundError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
 
-const { User, Role, Story } = models;
+const { User, Role, UserRole } = models;
 
 module.exports = {
   getAllUsers: async (request, response) => {
@@ -27,7 +27,7 @@ module.exports = {
   getById: async (request, response) => {
     const { id } = request.params;
 
-    const user = await User.findByPk(id, { include: [{ model: Role, as: 'roles' },{ model: Story, attributes: [] }] });
+    const user = await User.findByPk(id, { include: [{ model: Role, as: 'roles' }], attributes: { exclude: [ {model:UserRole}]} });
 
     if (!user) throw new NotFoundError(`user with id ${id} doesn't exist`);
     let { password, roles, dataValues, ...others } = user;

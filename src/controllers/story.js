@@ -1,7 +1,7 @@
 const { Sequelize, Op } = require('sequelize');
 const { v4: uuid } = require('uuid');
 const { ApplicationError } = require('../helpers/error');
-const { User, Story, StoryCategories, Category } = require('../models');
+const { User, Story, StoryCategories, Category, StorySection } = require('../models');
 const { slugify, getTagName } = require('../helpers/utils');
 const paginator = require('../helpers/paginator');
 const { StoryStatus } = require('../models/enums');
@@ -33,15 +33,28 @@ module.exports = {
         }
       }
     }
-    // if(!isStatus) throw new ApplicationError(400, "Invalid Status");
 
     let result;
 
     if (!isStatus) {
-      result = await paginator(Story, { skip, limit, where: { title: {[Op.iLike]: `%${keyword}%`}}, include: [{ model: Category }] });
+      result = await paginator(Story, 
+        { skip, limit, 
+          where: { 
+            headline: {[Op.iLike]: `%${keyword}%`}}, 
+            include: [
+              { model: Category, as: 'categories', attributes: ['id', 'title'] }
+            ] 
+          });
     }
     else {
-      result = await paginator(Story, { skip, limit, where: { status: status.toUpperCase(), title: {[Op.iLike]: `%${keyword}%`} }, include: [{ model: Category, attributes: [] }] });
+      result = await paginator(Story, 
+        { skip, limit, where: 
+          { status: status.toUpperCase(), 
+            headline: {[Op.iLike]: `%${keyword}%`} }, 
+            include: [
+              { model: Category, as: 'categories', attributes: ['id', 'title'] }
+            ] 
+          });
     }
 
     const message = result.data.length
@@ -98,24 +111,81 @@ module.exports = {
    * @returns {Object} callback that executes the controller
    */
   createStory: async (request, response) => {
-    const { categories } = request.body;
+    const { categories, tags, sections } = request.body;
     const story = {
       ...request.body,
       id: uuid(),
-      authorId: request.user.id,
+      authorId: request.user?.id,
     };
-    story.slug = slugify(`${request.body.title} ${story.id}`);
+    story.slug = slugify(`${request.body.headline} ${story.id}`);
 
-    const storyResponse = await Story.create(story);
+    let secs = sections.map((x,i) => { return { contents: x, index: i}})
+    story.sections = secs;
+    const storyResponse = await Story.create(story, { include: [{ association: 'sections'}]});
+    // await storyResponse.addSections(secs);
     const categoryResponse = categories
       ? await storyResponse.addCategory(categories)
       : [];
+      const tagResponse = tags
+        ? await storyResponse.addTag(tags)
+          : [];
     // const tagName = await getTagName(tagResponse);
 
     return response.status(201).json({
       status: 'success',
       message: 'story successfully created',
       result: storyResponse
+    });
+  },
+  
+  /**
+   * @function getStoryForEditById
+   * @description controller for getting a story by id
+   *
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  getStoryForEditById: async (request, response) => {
+    const { id } = request.params;
+    let storyInDb = await Story.findOne({
+      where: { id },
+      include: [
+        { model: StorySection, as: 'sections' },
+        { model: Category, as: 'categories', attributes: ['id', 'title'] },
+        {
+          model: User,
+          as: 'authors',
+          attributes: {
+            include: [
+              'id',
+              'name',
+              'username'
+            ],
+          },
+        },
+      ],
+    });
+    if (!storyInDb) throw new ApplicationError(404, 'Story not found');
+
+    const { dataValues, ...others } = storyInDb;
+    // console.log(dataValues)
+    // const tags = dataValues.categories.map((eachTag) => eachTag.categoryId);
+    // const tagName = await getTagName(tags);
+    const { categories, authors, ...newStoryResponse } = storyInDb.dataValues;
+
+    storyInDb = {
+      ...newStoryResponse,
+      categories,
+      authors,
+      // tags: tagName,
+    };
+
+    return response.status(200).json({
+      status: 'success',
+      message: 'story successfully retrieved',
+      result: storyInDb,
     });
   },
 

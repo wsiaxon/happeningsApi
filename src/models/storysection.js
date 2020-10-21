@@ -32,6 +32,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: StorySectionType.Text,
     },
   }, {
+    indexes: [
+      {
+          unique: true,
+          fields: ['storyId', 'index']
+      }
+    ],
     sequelize,
     modelName: 'StorySection',
   });

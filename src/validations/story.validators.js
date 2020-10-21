@@ -2,63 +2,60 @@ const { check } = require('express-validator');
 
 module.exports = {
   createStorySchema: [
-    check('title')
+    check('headline')
       .exists()
       .trim()
-      .withMessage('title of the story is required')
+      .withMessage('headline of the story is required')
       .matches(/[a-zA-Z]{3}/)
-      .withMessage('title must contain at least a 3 letter word')
+      .withMessage('headline must contain at least a 3 letter word')
       .isLength({ min: 5, max: 50 })
-      .withMessage('title should be between 5 to 50 characters'),
+      .withMessage('headline should be between 5 to 50 characters'),
 
-    check('content')
-      .trim()
-      .exists()
-      .withMessage('story content is required')
-      .isLength({ min: 50, max: 1024 })
-      .withMessage('story content should be between 50 to 1024 characters'),
+    check('sections')
+      .isArray()
+      // .isLength({ min: 1, max: 5 })
+      .withMessage('A minimum of 1 and maximum of 5 sections is required'),
 
-    check('tag')
+    check('tags')
       .optional()
       .isArray()
       .withMessage('tag must be an array'),
 
     check('status')
       .optional()
-      .matches(/^(open|submitted)$/)
-      .withMessage('Status must be either "open" or "submitted"'),
+      .matches(/^(OPEN|SUBMITTED)$/)
+      .withMessage('Status must be either "OPEN" or "SUBMITTED"'),
   ],
 
   getAllStoriesSchema: [
     check('status')
       .optional()
-      .isIn(['open', 'submitted', 'approved', 'published', 'rejected', 'scheduled'])
-      .withMessage("invalid 'status' value. expected: 'open', 'submitted', 'approved', 'published', 'rejected', 'scheduled'"),
+      .isIn(['OPEN', 'SUBMITTED', 'APPROVED', 'PUBLISHED', 'REJECTED', 'SCHEDULED'])
+      .withMessage("invalid 'status' value. expected: 'OPEN', 'SUBMITTED', 'APPROVED', 'PUBLISHED', 'REJECTED', 'SCHEDULED'"),
   ],
 
   editStorySchema: [
-    check('title')
+    check('headline')
       .optional()
       .trim()
       .matches(/[a-zA-Z]{3}/)
-      .withMessage('story title must contain at least a 3 letter word')
+      .withMessage('story headline must contain at least a 3 letter word')
       .isLength({ min: 5, max: 50 })
-      .withMessage('story title should be between 5 to 50 characters'),
+      .withMessage('story headline should be between 5 to 50 characters'),
 
-    check('content')
-      .optional()
-      .trim()
-      .isLength({ min: 50, max: 1024 })
-      .withMessage('story content should be between 50 to 1024 characters'),
+      check('sections')
+      .isArray()
+      .isLength({ min: 1, max: 5 })
+      .withMessage('A minimum of 1 and maximum of 5 sections is required'),
 
-    check('tag')
+    check('tags')
       .optional()
       .isArray()
-      .withMessage('tag must be an array'),
+      .withMessage('tags must be an array'),
 
     check('status')
       .optional()
-      .matches(/^(open|submitted)$/)
-      .withMessage('Status must be either "open" or "submitted"'),
+      .matches(/^(OPEN|SUBMITTED)$/)
+      .withMessage('Status must be either "OPEN" or "SUBMITTED"'),
   ],
 };

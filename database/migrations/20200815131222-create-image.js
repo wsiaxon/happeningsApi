@@ -10,17 +10,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      attribute: {
+      attribution: {
         type: Sequelize.STRING,
       },
       url: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      size: {
-        type: Sequelize.INTEGER,
-      },
-      dimensions: {
+      metadata: {
         type: Sequelize.STRING,
       },
       isDeleted: {
