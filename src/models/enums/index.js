@@ -9,6 +9,11 @@ const StoryChannel = {
     Radio: "RADIO"
 }
 
+const StoryType = {
+    Story: "STORY",
+    BreakingNews: "BREAKINGNEWS",
+}
+
 const StoryStatus = {
     Open: "OPEN",
     Submitted: "SUBMITTED",
@@ -102,4 +107,4 @@ function findPermissions(permissionName, permissionsObject){
     return [...findPermissions(others.join('.'), permissionNameValue)];
 }
 
-module.exports = { Gender, StoryChannel, StoryStatus, StorySectionType, AuthorType, RolePermissions, getAllPermissions, getPermissions }
+module.exports = { Gender, StoryChannel, StoryStatus, StoryType, StorySectionType, AuthorType, RolePermissions, getAllPermissions, getPermissions }

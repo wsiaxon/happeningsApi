@@ -2,13 +2,18 @@ const passport = require('passport');
 const { Router } = require('express');
 const asyncWrapper = require('../middleware/asyncWrapper');
 const { signup, signin, socialLogin, twitterLogin, verifyEmail,
-  resendEmailVerification, changePassword, forgotPassword, resetPassword,
+  resendEmailVerification, changePassword, forgotPassword, resetPassword, getCurrentConfig,
 } = require('../controllers/auth');
 const { verifyToken } = require('../middleware/authentication');
 const { signupSchema, signinSchema, changePasswordSchema, emailSchema, passwordSchema } = require('../validations/auth.validators');
 const validator = require('../middleware/validator');
 
 const router = Router();
+
+router.get(
+  '/configuration',
+  asyncWrapper(getCurrentConfig),
+);
 
 router.post(
   '/register',

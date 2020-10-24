@@ -6,6 +6,22 @@ const { User, Story } = require('../models');
 config();
 
 module.exports = {
+  checkToken: (request, response, next) => {
+    const authHeader = request.headers.authorization;
+    if(!authHeader) return next();
+
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(token, process.env.JWT_KEY, async (error, decodedToken) => {
+      if (error) return next();
+
+      const { id } = decodedToken;
+
+      request.userId = id;
+
+      return next();
+    });
+  },
   /**
    * @param {Object} request express request object
    * @param {Object} response express response object
@@ -15,11 +31,12 @@ module.exports = {
    */
   verifyToken: (request, response, next) => {
     const authHeader = request.headers.authorization;
-    if (!authHeader) throw new ApplicationError(401, 'Authorization has been denied');
+    if (!authHeader) return next(new ApplicationError(401, 'Authorization has been denied'));
 
     const token = authHeader.split(' ')[1];
 
     jwt.verify(token, process.env.JWT_KEY, async (error, decodedToken) => {
+      console.log(decodedToken)
       if (error) return next(new ApplicationError(401, `${error.message}`));
 
       const { id } = decodedToken;

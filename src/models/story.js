@@ -1,6 +1,6 @@
 const { Model } = require('sequelize');
 const { Sequelize } = require('sequelize');
-const { StoryChannel, StoryStatus } = require('./enums');
+const { StoryChannel, StoryStatus, StoryType } = require('./enums');
 // const AuthorStory = require('./authorStory');
 // const StoryCategory = require('./storyCategory');
 // const StoryTag = require('./storyTag');
@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: StoryChannel.Blog,
     },
     type: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM(Object.values(StoryType)),
     },
     slug: {
       type: DataTypes.STRING,

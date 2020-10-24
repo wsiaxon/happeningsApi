@@ -27,10 +27,10 @@ module.exports = {
   ],
 
   signinSchema: [
-    check('email')
+    check('usernameOrEmail')
       .not()
       .isEmpty()
-      .withMessage('email is required'),
+      .withMessage('username or email is required'),
 
     check('password')
       .not()
