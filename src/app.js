@@ -7,6 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import errorHandler from './middleware/errorHandler';
 import routes from './routes';
 import swaggerDoc from '../docs/happening-v1.json';
+import { checkToken } from './middleware/authentication';
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-app.use('/api', routes);
+app.use('/api', checkToken, routes);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.get('/', (_, response) => {

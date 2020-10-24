@@ -119,8 +119,8 @@ module.exports = {
     };
     story.slug = slugify(`${request.body.headline} ${story.id}`);
 
-    let secs = sections.map((x,i) => { return { contents: x, index: i}})
-    story.sections = secs;
+    // let secs = sections.map((x,i) => { return { contents: x, index: i}})
+    // story.sections = secs;
     const storyResponse = await Story.create(story, { include: [{ association: 'sections'}]});
     // await storyResponse.addSections(secs);
     const categoryResponse = categories

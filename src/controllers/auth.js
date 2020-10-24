@@ -7,10 +7,24 @@ const {
 } = require('../helpers/auth');
 const models = require('../models');
 const notification = require('../services/Notification');
+const { Op } = require('sequelize');
 
 const { User } = models;
 
 module.exports = {
+  getCurrentConfig: async (request, response) => {
+
+    // const user = request.user?.id ? await User.findOne({ 
+    //   where: {id: request.user?.id},
+    //   attributes: ['id', 'name']
+    // }) : { id: 0 };
+
+    return response.status(200).json({
+      status: 'success',
+      result: { session: {userId: request.userId } },
+    });
+  },
+
   signup: async (request, response) => {
     const existingUser = await User.getExistingUser(request.body.email);
     if (existingUser) throw new ApplicationError(409, 'email is already registered');
@@ -35,21 +49,25 @@ module.exports = {
   },
 
   signin: async (request, response) => {
-    const { email, password } = request.body;
+    const { usernameOrEmail, password } = request.body;
 
-    const user = await User.getExistingUser(email);
-    if (!user) throw new ApplicationError(401, 'email or password is incorrect');
+    const user = await User.findOne({ 
+      where: {
+        [Op.or]: { username: usernameOrEmail, email: usernameOrEmail }
+      }
+    });
+    if (!user) throw new ApplicationError(401, 'Invalid username, email or password');
 
     const isPassword = await user.validatePassword(password);
     if (!isPassword) {
-      throw new ApplicationError(401, 'email or password is incorrect');
+      throw new ApplicationError(401, 'Invalid username, email or password is incorrect');
     }
 
     const token = generateToken(user);
 
     return response.status(200).json({
       status: 'success',
-      result: { user: user.toJSON(), token },
+      result: { user: user.toJSON(), accessToken: token, expireInSeconds: 24 * 3600, encryptedAccessToken: token },
     });
   },
 

@@ -1,4 +1,4 @@
-const { StoryChannel, StoryStatus } = require("../../src/models/enums");
+const { StoryChannel, StoryStatus, StoryType } = require("../../src/models/enums");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -18,7 +18,7 @@ module.exports = {
         defaultValue: StoryChannel.Blog,
       },
       type: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM(Object.values(StoryType)),
       },
       slug: {
         type: Sequelize.STRING,
