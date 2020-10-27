@@ -36,7 +36,6 @@ module.exports = {
     const token = authHeader.split(' ')[1];
 
     jwt.verify(token, process.env.JWT_KEY, async (error, decodedToken) => {
-      console.log(decodedToken)
       if (error) return next(new ApplicationError(401, `${error.message}`));
 
       const { id } = decodedToken;
