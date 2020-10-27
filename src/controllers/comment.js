@@ -1,5 +1,6 @@
 const model = require('../models');
 const { NotFoundError } = require('../helpers/error');
+const { slugify, getTagName } = require('../helpers/utils');
 const paginator = require('../helpers/paginator');
 
 const { Comment } = model;
@@ -7,7 +8,6 @@ const { Comment } = model;
 module.exports = {
   getAllComments: async (request, response) => {
     const { skip = 0, limit = 10 } = request.query;
-
     const { data, count } = await paginator(Comment, { skip, limit });
 
     return response.status(200).json({
@@ -21,20 +21,6 @@ module.exports = {
     });
   },
 
-  getPagedComments: async (request, response) => {
-    const { skip = 1, limit = 10 } = request.query;
-
-    const { data, count } = await paginator(Comment, { skip, limit });
-
-    return response.status(200).json({
-      status: 'success',
-      result: data,
-      count,
-      skip: +skip,
-      limit: +limit,
-    });
-  },
-  
   getCommentById: async (request, response) => {
     const { id } = request.params;
 
@@ -60,7 +46,7 @@ module.exports = {
     const comment = {
       ...request.body,
     };
-    comment.slug = slugify(`${request.body.name}${(' '+comment.parentId || '')}`);
+    comment.slug = slugify(`${request.body.name} ${(comment.parentId || '')}`);
 
     const commentResponse = await Comment.create(comment);
 

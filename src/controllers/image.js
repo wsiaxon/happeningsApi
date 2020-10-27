@@ -11,7 +11,7 @@ const { Image } = model;
 
 module.exports = {
   uploadImage: async (req, res) => {
-    singleUpload(req, res, function(err) {
+    singleUpload(req, res, async (err) => {
       if (err) {
         return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}]});
       }

@@ -1,8 +1,8 @@
 const { Router } = require('express');
 const { getAllComments, getCommentById, createComment } = require('../controllers/comment');
-const asyncWrapper = require('../middleware/asyncWrapper');
 const { createCommentSchema } = require('../validations/comment.validators');
 const validator = require('../middleware/validator');
+const asyncWrapper = require('../middleware/asyncWrapper');
 const { verifyToken, isAdmin } = require('../middleware/authentication');
 
 const router = Router();
@@ -14,7 +14,7 @@ router.get(
 
 router.post(
   '/create',
-  verifyToken,
+  // verifyToken,
   validator(createCommentSchema),
   asyncWrapper(createComment),
 );
