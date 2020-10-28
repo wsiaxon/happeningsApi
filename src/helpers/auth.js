@@ -31,8 +31,8 @@ function verifyPassword(encodedPassword, password) {
   return argon2i.verify(encodedPassword, password);
 }
 
-function generateToken({ id }, duration = AppConsts.JwtDuration) {
-  return jwt.sign({ id }, process.env.JWT_KEY, { expiresIn: duration });
+function generateToken({ id, roles }, duration = AppConsts.JwtDuration) {
+  return jwt.sign({ id, role: roles.map(r => r.name) }, process.env.JWT_KEY, { expiresIn: duration });
 }
 
 function urlSafeRandomString({ length }) {

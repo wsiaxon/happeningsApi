@@ -8,20 +8,25 @@ const {
 const models = require('../models');
 const notification = require('../services/Notification');
 const { Op } = require('sequelize');
+const { getAllPermissions } = require('../models/enums');
 
-const { User } = models;
+const { User, Role } = models;
 
 module.exports = {
   getCurrentConfig: async (request, response) => {
 
-    // const user = request.user?.id ? await User.findOne({ 
-    //   where: {id: request.user?.id},
-    //   attributes: ['id', 'name']
-    // }) : { id: 0 };
+    const user = request.userId ? await User.findOne({ 
+      where: {id: request.userId},
+      include: [{ model: Role, as: 'roles' }],
+      attributes: ['id', 'name']
+    }) : { id: 0 };
+
+    var grantedPermissions = user.id ? user.roles.map(r => r.grantedPermissions).flat() : [];
+    console.log(user.roles)
 
     return response.status(200).json({
       status: 'success',
-      result: { session: {userId: request.userId } },
+      result: { session: {userId: request.userId }, auth: { allPermissions: getAllPermissions(), grantedPermissions } },
     });
   },
 
@@ -54,7 +59,8 @@ module.exports = {
     const user = await User.findOne({ 
       where: {
         [Op.or]: { username: usernameOrEmail, email: usernameOrEmail }
-      }
+      },
+      include: [{ model: Role, as: 'roles' }]
     });
     if (!user) throw new ApplicationError(401, 'Invalid username, email or password');
 
