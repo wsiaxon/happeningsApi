@@ -20,13 +20,18 @@ module.exports = {
       include: [{ model: Role, as: 'roles' }],
       attributes: ['id', 'name']
     }) : { id: 0 };
-
-    var grantedPermissions = user.id ? user.roles.map(r => r.grantedPermissions).flat() : [];
-    console.log(user.roles)
+    const allPermissions = getAllPermissions().reduce(function(acc, cur, i) {
+      acc[cur] = true;
+      return acc;
+    }, {});
+    const grantedPermissions = user.id ? user.roles?.flatMap(r => r.grantedPermissions).reduce(function(acc, cur, i) {
+      acc[cur] = true;
+      return acc;
+    }, {}) : [];
 
     return response.status(200).json({
       status: 'success',
-      result: { session: {userId: request.userId }, auth: { allPermissions: getAllPermissions(), grantedPermissions } },
+      result: { session: {userId: request.userId }, auth: { allPermissions, grantedPermissions } },
     });
   },
 
