@@ -69,6 +69,12 @@ const RolePermissions = {
         Create: "Comment.Create",
         Update: "Comment.Update",
         Delete: "Comment.Delete"
+    },
+    Tag: {
+        Read: "Tag.Read",
+        Create: "Tag.Create",
+        Update: "Tag.Update",
+        Delete: "Tag.Delete"
     }
 }
 const getAllPermissions = () => {

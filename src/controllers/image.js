@@ -2,29 +2,46 @@ const model = require('../models');
 const { NotFoundError, ApplicationError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
 const upload = require('../services/image-upload');
-
-const singleUpload = upload.single('image');
-
-const error = require('../helpers/error');
-
 const { Image } = model;
 
+const singleUpload = upload.single('image');
 module.exports = {
-  uploadImage: async (req, res) => {
-    singleUpload(req, res, async (err) => {
+  uploadImage: async (req, res, next) => {
+    singleUpload(req, res, async (err, doc) => {
+      // console.log("UPLOAD RESULT: ", doc);
       if (err) {
-        return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}]});
+        next(new ApplicationError(422, `Image Upload Error. ${err.message}`));
       }
       
       const imageResponse = await Image.create({url: req.file.location});
-      return res.json({'status': 'done', 'url': req.file.location});
+      return res.json({
+        status: 'done',
+        message: 'Image uploaded successfully',
+        result: imageResponse
+        });
     });
   },
+  
+  // uploadImage: (req, res) => {
+  //   let result = await singleUpload(req, res);
+  //   console.log("Upload Result", result);
+  //   try{
+  //     const imageResponse = await Image.create({url: req.file.location});
+  //     return res.json({
+  //       status: 'done',
+  //       message: 'Image uploaded successfully',
+  //       result: null
+  //       });
+  //   }
+  //   catch(err){
+  //     throw new ApplicationError(422, `Image Upload Error. ${err.message}`);
+  //   }
+  // },
 
   getAllImages: async (request, response) => {
     const { skip = 0, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(Image, { skip, limit });
+    const { data, count } = await paginator(Image, { skip, limit, exclude: ['metadata'] });
 
     return response.status(200).json({
       status: 'success',
