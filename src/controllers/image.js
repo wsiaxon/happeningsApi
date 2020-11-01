@@ -12,8 +12,10 @@ module.exports = {
       if (err) {
         next(new ApplicationError(422, `Image Upload Error. ${err.message}`));
       }
+
+      const { caption, attribution } = req.files;
       
-      const imageResponse = await Image.create({url: req.file.location});
+      const imageResponse = await Image.create({url: req.file.location, caption, attribution });
       return res.json({
         status: 'done',
         message: 'Image uploaded successfully',
