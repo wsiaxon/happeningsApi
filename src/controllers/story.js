@@ -1,7 +1,7 @@
 const { Sequelize, Op } = require('sequelize');
 const { v4: uuid } = require('uuid');
 const { ApplicationError } = require('../helpers/error');
-const { User, Story, StoryCategories, Category, StorySection } = require('../models');
+const { User, Story, StoryCategory, Category, StorySection } = require('../models');
 const { slugify, getTagName } = require('../helpers/utils');
 const paginator = require('../helpers/paginator');
 const { StoryStatus } = require('../models/enums');
@@ -112,24 +112,26 @@ module.exports = {
    * @returns {Object} callback that executes the controller
    */
   createStory: async (request, response) => {
-    const { categories, tags, sections } = request.body;
     const story = {
       ...request.body,
       id: uuid(),
       authorId: request.user?.id,
     };
     story.slug = slugify(`${request.body.headline} ${story.id}`);
+    const categories = story.categories?.map(x => x.id)
+    const tags = story.tags?.map(x => x.id)
+    const authors = story.authors?.map(x => x.id)
 
-    // let secs = sections.map((x,i) => { return { contents: x, index: i}})
-    // story.sections = secs;
     const storyResponse = await Story.create(story, { include: [{ association: 'sections'}]});
-    // await storyResponse.addSections(secs);
     const categoryResponse = categories
       ? await storyResponse.addCategory(categories)
       : [];
-      const tagResponse = tags
-        ? await storyResponse.addTag(tags)
-          : [];
+    const tagResponse = tags
+      ? await storyResponse.addTag(tags)
+        : [];
+    const authorResponse = authors
+      ? await storyResponse.addAuthor(authors)
+        : [];
     // const tagName = await getTagName(tagResponse);
 
     return response.status(201).json({
@@ -207,7 +209,7 @@ module.exports = {
       },
       include: [
         {
-          model: StoryCategories,
+          model: StoryCategory,
           as: 'categories',
           attributes: {
             exclude: ['createdAt', 'updatedAt'],
@@ -265,7 +267,7 @@ module.exports = {
       },
       include: [
         {
-          model: StoryCategories,
+          model: StoryCategory,
           as: 'category',
           attributes: {
             exclude: ['createdAt', 'updatedAt'],
@@ -307,6 +309,54 @@ module.exports = {
   },
 
   /**
+   * @function updateStory
+   * @description controller for creating a story
+   *
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  updateStory: async (request, response) => {
+    const { id } = request.params;
+    const { categories, tags, sections } = request.body;
+    const story = {
+      ...request.body
+    };
+    if (story.id != id) throw new ApplicationError(400, 'Inconsistent story identifier');
+    story.slug = slugify(`${request.body.headline} ${story.id}`);
+
+    let storyInDb = await Story.findOne({
+      where: { id },
+      include: [
+        { model: StorySection, as: 'sections' },
+        { model: Category, as: 'categories', attributes: ['id', 'title'] },
+        {
+          model: User,
+          as: 'authors',
+          attributes: {
+            include: [
+              'id',
+              'name',
+              'username'
+            ],
+          },
+        },
+      ],
+    });
+    if (!storyInDb) throw new ApplicationError(404, 'Story not found');
+    
+    const result = await Story.update(story, { where: { id: story.id }, include: [
+      { model: StorySection, as: 'sections' }], returning: true });
+
+    return response.status(200).json({
+      status: 'success',
+      message: 'story successfully updated',
+      result: result
+    });
+  },
+  
+  /**
    * @function editStory
    * @description controller for editing a story
    *
@@ -327,13 +377,13 @@ module.exports = {
     const storyResponse = await Story.updateStory(request.storyInstance, story);
     let tagName = [];
     // if (tag) {
-    //   await StoryCategories.deleteTags(storyResponse.id);
-    //   const tagResponse = await StoryCategories.createTags(
+    //   await StoryCategory.deleteTags(storyResponse.id);
+    //   const tagResponse = await StoryCategory.createTags(
     //     tag, storyResponse.id, request.user.id,
     //   );
     //   tagName = await getTagName(tagResponse);
     // } else {
-    //   const value = await StoryCategories.findTags(storyResponse.id);
+    //   const value = await StoryCategory.findTags(storyResponse.id);
     //   const createdTags = value.map((eachTag) => eachTag.dataValues.categoryId);
     //   tagName = await getTagName(createdTags);
     // }
@@ -342,6 +392,18 @@ module.exports = {
       status: 'success',
       message: 'story successfully updated',
       result: { ...storyResponse.dataValues, tags: tagName },
+    });
+  },
+  
+  deleteStory: async (request, response) => {
+    const {id} = request.params;
+
+    const delResponse = await Story.destroy({where: {id}, cascade: true});
+
+    return response.status(200).json({
+      status: 'success',
+      message: 'Story deleted successfully',
+      result: { id, count: delResponse},
     });
   },
 };

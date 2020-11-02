@@ -13,6 +13,8 @@ module.exports = {
           model: 'Stories', // name of Target model
           key: 'id', // key in Target model that we're referencing
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -20,6 +22,7 @@ module.exports = {
           model: 'Users', // name of Target model
           key: 'id', // key in Target model that we're referencing
         },
+        onDelete: 'CASCADE',
       },
       authorType: {
         type: Sequelize.ENUM(Object.values(AuthorType)),

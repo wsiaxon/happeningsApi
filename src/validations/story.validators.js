@@ -45,7 +45,6 @@ module.exports = {
 
       check('sections')
       .isArray()
-      .isLength({ min: 1, max: 5 })
       .withMessage('A minimum of 1 and maximum of 5 sections is required'),
 
     check('tags')
@@ -54,8 +53,7 @@ module.exports = {
       .withMessage('tags must be an array'),
 
     check('status')
-      .optional()
-      .matches(/^(OPEN|SUBMITTED)$/)
+      .matches(/^(OPEN|SUBMITTED|APPROVED|PUBLISHED|REJECTED|SHCEDULED)$/)
       .withMessage('Status must be either "OPEN" or "SUBMITTED"'),
   ],
 };
