@@ -1,15 +1,18 @@
+const { Op } = require('sequelize');
 const model = require('../models');
 const { NotFoundError, ApplicationError } = require('../helpers/error');
 const paginator = require('../helpers/paginator');
-const error = require('../helpers/error');
 
 const { Tag } = model;
 
 module.exports = {
   getAllTags: async (request, response) => {
-    const { skip = 0, limit = 10 } = request.query;
+    const { keyword='', skip = 0, limit = 10 } = request.query;
 
-    const { data, count } = await paginator(Tag, { skip, limit });
+    const { data, count } = await paginator(Tag, { skip, limit,
+      where: { 
+        name: {[Op.iLike]: `%${keyword}%`}
+      } });
 
     return response.status(200).json({
       status: 'success',

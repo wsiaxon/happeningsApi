@@ -1,7 +1,7 @@
 const { Router } = require('express');
-const { getAllRoles, getRoleById, createRole, getRoleForEditById, getAllPermissions } = require('../controllers/role');
+const { getAllRoles, getRoleById, createRole, getRoleForEditById, getAllPermissions, updateRole } = require('../controllers/role');
 const asyncWrapper = require('../middleware/asyncWrapper');
-const { createRoleSchema } = require('../validations/role.validators');
+const { createRoleSchema, editRoleSchema } = require('../validations/role.validators');
 const validator = require('../middleware/validator');
 const { verifyToken, isAdmin } = require('../middleware/authentication');
 
@@ -32,6 +32,13 @@ router.get(
 router.get(
   '/get/:id',
   asyncWrapper(getRoleById),
+);
+
+router.put(
+  '/update',
+  verifyToken,
+  validator(editRoleSchema),
+  asyncWrapper(updateRole),
 );
 
 module.exports = router;

@@ -5,11 +5,11 @@ module.exports = {
     check('name')
       .exists()
       .trim()
-      .withMessage('name of the comment is required')
+      .withMessage('Name of the Role is required')
       .matches(/[a-zA-Z]{3,}/)
-      .withMessage('name must contain at least a 3 letter word'),
+      .withMessage('Name must contain at least a 3 letters'),
 
-    check('permissions')
+    check('grantedPermissions')
       .isArray({ min: 1})
       .withMessage('Role must have at least one permission'),
   ],
@@ -19,9 +19,9 @@ module.exports = {
       .optional()
       .trim()
       .matches(/[a-zA-Z]{3,}/)
-      .withMessage('Role name must contain at least a 3 letter word'),
+      .withMessage('Role name must contain at least a 3 letters'),
 
-      check('permissions')
+    check('grantedPermissions')
       .isArray({ min: 1})
       .withMessage('Role must have at least one permission'),
   ],

@@ -40,7 +40,8 @@ module.exports = {
       result = await paginator(Story, 
         { skip, limit, 
           where: { 
-            headline: {[Op.iLike]: `%${keyword}%`}}, 
+            headline: {[Op.iLike]: `%${keyword}%`}
+          }, 
             include: [
               { model: Category, as: 'categories', attributes: ['id', 'title'] }
             ] 
