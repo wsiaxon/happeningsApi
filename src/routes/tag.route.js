@@ -14,8 +14,8 @@ router.get(
 
 router.post(
   '/create',
-  // verifyToken,
-  // validator(createTagSchema),
+  verifyToken,
+  validator(createTagSchema),
   asyncWrapper(createTag),
 );
 

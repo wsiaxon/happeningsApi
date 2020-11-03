@@ -11,6 +11,8 @@ module.exports = {
           model: 'Stories', // name of Target model
           key: 'id', // key in Target model that we're referencing
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       categoryId: {
         type: Sequelize.INTEGER,
@@ -18,6 +20,7 @@ module.exports = {
           model: 'Categories', // name of Target model
           key: 'id', // key in Target model that we're referencing
         },
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

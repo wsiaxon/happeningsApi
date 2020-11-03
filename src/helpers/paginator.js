@@ -17,7 +17,7 @@ const paginator = async (Source, options) => {
     dataToSource,
     ...otherOptions
   } = options;
-  const offset = limit * +skip;
+  const offset = +skip;
 
   if (!Source) {
     const { data: result, count } = await dataSource({

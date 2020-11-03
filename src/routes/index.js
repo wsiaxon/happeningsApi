@@ -6,6 +6,7 @@ const commentRoute = require('./comment.route');
 const tagRoute = require('./tag.route');
 const authRoute = require('./auth.route');
 const storyRoute = require('./story.route');
+const imageRoute = require('./image.route');
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/comment', commentRoute);
 router.use('/tag', tagRoute);
 router.use('/auth', authRoute);
 router.use('/story', storyRoute);
+router.use('/image', imageRoute);
 
 module.exports = router;

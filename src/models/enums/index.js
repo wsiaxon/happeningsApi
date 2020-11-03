@@ -50,7 +50,11 @@ const RolePermissions = {
         Read: "Story.Read",
         Create: "Story.Create",
         Update: "Story.Update",
-        Delete: "Story.Delete"
+        Delete: "Story.Delete",
+        Approve: "Story.Approve",
+        Reject: "Story.Reject",
+        Publish: "Story.Publish",
+        Schedule: "Story.Schedule",
     },
     Category: {
         Read: "Category.Read",
@@ -69,6 +73,12 @@ const RolePermissions = {
         Create: "Comment.Create",
         Update: "Comment.Update",
         Delete: "Comment.Delete"
+    },
+    Tag: {
+        Read: "Tag.Read",
+        Create: "Tag.Create",
+        Update: "Tag.Update",
+        Delete: "Tag.Delete"
     }
 }
 const getAllPermissions = () => {

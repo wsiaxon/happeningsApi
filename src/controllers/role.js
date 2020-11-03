@@ -71,20 +71,37 @@ module.exports = {
    * @returns {Object} callback that executes the controller
    */
   createRole: async (request, response) => {
-    const { permissions, ...role } = {
+    const role = {
       ...request.body,
     };
-    var grantedPermissions = [];
-    permissions.forEach(p => {
-      grantedPermissions.push(...getPermissions(p));
-    })
 
-    role.grantedPermissions = grantedPermissions;
     const roleResponse = await Role.create(role);
 
     return response.status(201).json({
       status: 'success',
       message: 'Role successfully created',
+      result: roleResponse,
+    });
+  },
+  
+  /**
+   * @function createRole
+   * @description controller for creating a role
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} callback that executes the controller
+   */
+  updateRole: async (request, response) => {
+    const role = {
+      ...request.body,
+    };
+
+    const roleResponse = await Role.update(role, { where: { id: role.id }});
+
+    return response.status(201).json({
+      status: 'success',
+      message: 'Role successfully updated',
       result: roleResponse,
     });
   },

@@ -14,14 +14,17 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: User,
         key: 'id'
-      }
+      },
+      onDelete: 'CASCADE'
     },
     storyId: {
       type: DataTypes.UUID,
       references: {
         model: Story, 
         key: 'id'
-      }
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
   }, {
     sequelize,

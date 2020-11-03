@@ -1,6 +1,7 @@
 const { Model } = require('sequelize');
 const { Sequelize } = require('sequelize');
 const { StoryChannel, StoryStatus, StoryType } = require('./enums');
+const StorySection = require('./storySection');
 // const AuthorStory = require('./authorStory');
 // const StoryCategory = require('./storyCategory');
 // const StoryTag = require('./storyTag');
@@ -101,7 +102,8 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Story.updateStory = async (storyInstance, story) => {
-    story = await storyInstance.update(story, { returning: true });
+    story = await storyInstance.update(story, { where: { id: story.id }, include: [
+      { model: StorySection, as: 'sections' }], returning: true });
     return story;
   };
 

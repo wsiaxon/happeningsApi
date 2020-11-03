@@ -28,15 +28,6 @@ fs
     && (file.slice(-3) === '.js'))
   .forEach(async (file) => {
     const model = require(path.join(__dirname, file))(sequelize, DataTypes);
-    // if (process.env.NODE_ENV !== "production") {
-    //   try {
-    //     await model.sync({ alter: true });
-    //     console.log("AFTER SYNCHING!!!", model.name)
-    //   }
-    //   catch (e) {
-    //     console.log("Error:", model.name)
-    //   }
-    // }
     
     db[model.name] = model;
   });
