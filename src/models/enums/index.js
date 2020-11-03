@@ -50,7 +50,11 @@ const RolePermissions = {
         Read: "Story.Read",
         Create: "Story.Create",
         Update: "Story.Update",
-        Delete: "Story.Delete"
+        Delete: "Story.Delete",
+        Approve: "Story.Approve",
+        Reject: "Story.Reject",
+        Publish: "Story.Publish",
+        Schedule: "Story.Schedule",
     },
     Category: {
         Read: "Category.Read",
