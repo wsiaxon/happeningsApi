@@ -47,10 +47,19 @@ const RolePermissions = {
         Delete: "Role.Delete"
     },
     Story: {
-        Read: "Story.Read",
+        Read: { 
+            All: "Story.Read.All",
+            Submitted: "Story.Read.Submitted",
+            Approved: "Story.Read.Approved", 
+            Rejected: "Story.Read.Rejected", 
+            Published: "Story.Read.Published",
+            Scheduled: "Story.Read.Scheduled",
+            One: "Story.Read.One" 
+        },
         Create: "Story.Create",
         Update: "Story.Update",
         Delete: "Story.Delete",
+        CreateBNews: "Story.CreateBNews",
         Approve: "Story.Approve",
         Reject: "Story.Reject",
         Publish: "Story.Publish",

@@ -8,8 +8,8 @@ module.exports = {
       .withMessage('headline of the story is required')
       .matches(/[a-zA-Z]{3}/)
       .withMessage('headline must contain at least a 3 letter word')
-      .isLength({ min: 5, max: 50 })
-      .withMessage('headline should be between 5 to 50 characters'),
+      .isLength({ min: 5, max: 256 })
+      .withMessage('headline should be between 5 to 256 characters'),
 
     check('sections')
       .isArray()
@@ -40,8 +40,8 @@ module.exports = {
       .trim()
       .matches(/[a-zA-Z]{3}/)
       .withMessage('story headline must contain at least a 3 letter word')
-      .isLength({ min: 5, max: 50 })
-      .withMessage('story headline should be between 5 to 50 characters'),
+      .isLength({ min: 5, max: 256 })
+      .withMessage('story headline should be between 5 to 256 characters'),
 
       check('sections')
       .isArray()
